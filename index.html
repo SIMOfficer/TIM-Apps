@@ -311,6 +311,32 @@ label.lbl{font-size:12px;font-weight:500;color:var(--txt2);margin-bottom:5px;dis
       <div id="res-lvl"></div>
       <div id="res-msg" style="margin-top:10px;font-size:13px;color:var(--txt2)"></div>
     </div>
+    <!-- Sertifikat Digital -->
+    <div id="cert-section" style="display:none;margin-bottom:14px">
+      <div class="card" style="border-color:#d4a017;background:linear-gradient(135deg,#fffbeb,#fef9e7)">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+          <span style="font-size:24px">🎓</span>
+          <div>
+            <h3 style="font-size:13px;color:#92400e">Sertifikat Kelulusan</h3>
+            <p style="font-size:11px;color:#b45309;margin-top:2px">Selamat! Anda berhak mendapatkan sertifikat untuk modul ini.</p>
+          </div>
+        </div>
+        <div id="cert-loading" style="display:flex;align-items:center;gap:8px;font-size:12px;color:#92400e">
+          <div class="dots" style="padding:0"><span></span><span></span><span></span></div>
+          <span>Menyiapkan sertifikat…</span>
+        </div>
+        <div id="cert-ready" style="display:none">
+          <a id="cert-link" href="#" target="_blank" class="btn btn-sm" style="background:#d97706;color:#fff;border-color:#b45309;text-decoration:none">
+            <i class="ti ti-certificate"></i> Unduh Sertifikat PDF
+          </a>
+          <p style="font-size:11px;color:#92400e;margin-top:6px">Sertifikat juga sudah dilampirkan di email Anda.</p>
+        </div>
+        <div id="cert-error" style="display:none;font-size:12px;color:#b91c1c">
+          Sertifikat tidak tersedia. Pastikan admin telah mengatur template sertifikat.
+        </div>
+      </div>
+    </div>
+
     <div class="card" style="margin-bottom:14px">
       <h3 style="margin-bottom:10px;font-size:13px"><i class="ti ti-mail"></i> Kirim &amp; Simpan Hasil</h3>
       <div style="display:flex;gap:8px;flex-wrap:wrap">
@@ -515,13 +541,15 @@ async function syncRegister(user) {
 }
 
 async function syncQuizResult(result) {
-  // Simpan hasil kuis (email otomatis dikirim dari Apps Script)
-  await apiPost({ action: 'quiz_result', ...result });
+  // Simpan hasil kuis (email + sertifikat otomatis dari Apps Script)
+  const res = await apiPost({ action: 'quiz_result', ...result });
   // Simpan progress
   await apiPost({ action: 'save_progress', NIK: result.NIK, name: result.name,
     moduleId: result.moduleId, moduleName: result.moduleName,
     score: result.score, total: result.total, pct: result.pct,
     completedAt: result.completedAt });
+  // Kembalikan certUrl jika ada
+  return (res && res.certUrl) ? res.certUrl : null;
 }
 
 async function syncForumPost(post) {
@@ -786,8 +814,9 @@ async function finishQuiz(){
   ST.progress=np;await S.s('ti:prog:'+ST.user.NIK,np);
   const result={id:Date.now(),name:ST.user.name,NIK:ST.user.NIK,email:ST.user.email,dept:ST.user.dept,moduleId:m.id,moduleName:m.title,moduleCat:m.cat,score:sc,total:tot,pct,completedAt:new Date().toISOString()};
   let results=await S.gs('ti:all_results')||[];results.push(result);await S.ss('ti:all_results',results);
-  syncQuizResult(result); // kirim ke Sheets + email otomatis
   showResult();showV('result');
+  // Kirim ke Sheets + email; update tombol sertifikat saat selesai
+  syncQuizResult(result).then(certUrl => updateCertSection(result.pct, certUrl));
 }
 function showResult(){
   const p=ST.progress[ST.mod.id];const m=ST.mod;if(!p)return;
@@ -803,11 +832,25 @@ function showResult(){
   else{lv='Level 5';lc='b-green';msg='Luar biasa! Penguasaan materi sangat baik!';}
   document.getElementById('res-lvl').innerHTML=`<span class="badge ${lc}" style="font-size:13px;padding:5px 14px"><i class="ti ti-award"></i> ${lv}</span>`;
   document.getElementById('res-msg').textContent=msg;
+  // Tampilkan seksi sertifikat jika lulus threshold
+  const certSec=document.getElementById('cert-section');
+  if(p.pct>=76){certSec.style.display='block';document.getElementById('cert-loading').style.display='flex';document.getElementById('cert-ready').style.display='none';document.getElementById('cert-error').style.display='none';}
+  else{certSec.style.display='none';}
   document.getElementById('ans-review').innerHTML='<h3 style="margin-bottom:10px;font-size:13px">Tinjauan Jawaban</h3>'+
     m.quiz.map((q,i)=>{const a=p.answers[i];if(!a)return'';return`<div style="display:flex;align-items:flex-start;gap:9px;padding:9px 0;border-top:0.5px solid var(--border);font-size:12px">
       <span style="font-size:17px;color:${a.isCorrect?'var(--green)':'var(--red)'};flex-shrink:0">${a.isCorrect?'✓':'✗'}</span>
       <div><div style="font-weight:500">${q.q}</div><div style="color:var(--txt2);margin-top:2px">Jawaban: ${q.o[a.chosen]} ${a.isCorrect?'':' — Benar: '+q.o[a.correct]}</div></div>
     </div>`;}).join('');
+}
+function updateCertSection(pct, certUrl){
+  if(pct<76)return;
+  document.getElementById('cert-loading').style.display='none';
+  if(certUrl){
+    document.getElementById('cert-link').href=certUrl;
+    document.getElementById('cert-ready').style.display='block';
+  } else {
+    document.getElementById('cert-error').style.display='block';
+  }
 }
 function sendMail(){
   const u=ST.user;const p=ST.progress[ST.mod.id];const m=ST.mod;if(!p)return;
