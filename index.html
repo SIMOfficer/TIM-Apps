@@ -597,58 +597,58 @@ async function loadProgressFromAPI(nik) {
 }
 
 // ─── BUILT-IN MODULES ───────────────────────────────────────────────────────
-const BUILTIN=[
-  {id:'b1',title:'Konsep Dasar QC & Step Problem Solving',cat:'QCC 2.0',color:'#0f2d52',tag:'A',builtin:true,desc:'Fondasi QCC: pengertian, tujuan, 8 step problem solving',
-  sections:[
-    {h:'Pengertian QCC',b:'QCC (Quality Control Circle) adalah aktivitas kelompok kecil beranggotakan 5–10 orang dari tempat kerja yang sama, untuk menyelesaikan keluhan/kesulitan melalui 8 Step Problem Solving yang terstruktur.'},
-    {h:'Tujuan Aktivitas QCC',b:'1. Meningkatkan kemampuan individual member dan membantu aktualisasi diri.\n2. Menciptakan tempat kerja yang positif di mana setiap member merasa dihargai.\n3. Memberikan kontribusi untuk meningkatkan budaya dan struktur perusahaan.'},
-    {h:'8 Step Problem Solving',b:'Step 0-1: Pemilihan Thema\nStep 0-2: Rencana Aktivitas\nStep 1: Klarifikasi Masalah\nStep 2: Analisa Kondisi yang Ada (3G)\nStep 3: Penetapan Target\nStep 4: Analisa Sebab Akibat (Fishbone)\nStep 5: Rencana Penanggulangan (5W1H)\nStep 6: Penanggulangan\nStep 7: Evaluasi Hasil\nStep 8: Standarisasi & Tindak Lanjut'},
-    {h:'Konsep 3G',b:'• Genba (現場) – Pergi ke tempat kerja langsung\n• Genji (現実) – Lihat kondisi aktual\n• Genbutsu (現物) – Periksa benda/material yang terlibat'}
-  ],
-  quiz:[
-    {q:'Berapa jumlah anggota ideal dalam satu circle QCC?',o:['2–4 orang','5–10 orang','10–20 orang','Tidak ada batasan'],a:1,exp:'QCC beranggotakan 5–10 orang dari tempat kerja yang sama.'},
-    {q:'Pada step berapa dilakukan Penetapan Target dalam QCC 2.0?',o:['Step 1','Step 2','Step 3','Step 4'],a:2,exp:'Step 3 adalah Penetapan Target.'},
-    {q:'Metode apa yang digunakan pada Step 5?',o:['5S','5W1H','PDCA','FMEA'],a:1,exp:'Step 5 menggunakan metode 5W1H.'},
-    {q:'Genbutsu dalam 3G berarti...',o:['Pergi ke tempat kerja','Lihat kondisi aktual','Periksa benda/material','Catat data'],a:2,exp:'Genbutsu = periksa benda/material yang terlibat secara langsung.'}
-  ]},
-  {id:'b2',title:'Manajemen & Aktivitas QCC (CLMA)',cat:'QCC 2.0',color:'#1565c0',tag:'B',builtin:true,desc:'CLMA, level assessment, peran Circle Leader',
-  sections:[
-    {h:'Circle Leader Managing Activity (CLMA)',b:'CLMA adalah aktivitas utama Circle Leader berfokus pada People Development: assessment kemampuan member, development plan, dan monitoring progress.'},
-    {h:'Level Assessment',b:'5 area (Sumbu X):\nA. Konsep dasar QC\nB. Manajemen QCC\nC. QC Tools\nD. Skill Development\nE. Kaizen\n\nLevel:\n≤30% = Level 1\n31–50% = Level 2\n51–75% = Level 3\n76–85% = Level 4\n86–100% = Level 5'}
-  ],
-  quiz:[
-    {q:'CLMA adalah singkatan dari...',o:['Circle Leader Main Activity','Circle Leader Managing Activity','Control Level Management','Circle Level Monitoring'],a:1,exp:'CLMA = Circle Leader Managing Activity.'},
-    {q:'Persentase untuk Level 3?',o:['≤30%','31–50%','51–75%','76–85%'],a:2,exp:'Level 3 = 51–75%.'},
-    {q:'Minimal jam meeting QCC per bulan?',o:['1 jam','2 jam','4 jam','8 jam'],a:1,exp:'Meeting QCC minimal 2 jam per bulan.'}
-  ]},
-  {id:'b3',title:'Aplikasi QC Tools (7 Tools)',cat:'QCC 2.0',color:'#7b1fa2',tag:'C',builtin:true,desc:'7 alat analisa: Pareto, Fishbone, Control Chart, dll.',
-  sections:[
-    {h:'7 QC Tools',b:'1. Check Sheet – Formulir pencatatan data sistematis\n2. Grafik Garis & Balok – Visualisasi tren & perbandingan\n3. Diagram Pareto – Prioritas masalah (80/20)\n4. Fishbone (Ishikawa) – Analisa akar masalah (6M)\n5. Histogram – Distribusi data\n6. Scatter Diagram – Hubungan dua variabel\n7. Control Chart – Pemantauan stabilitas proses (UCL/LCL)'}
-  ],
-  quiz:[
-    {q:'Tool QC untuk identifikasi PRIORITAS masalah?',o:['Check Sheet','Diagram Pareto','Control Chart','Scatter Diagram'],a:1,exp:'Diagram Pareto menggunakan prinsip 80/20.'},
-    {q:'Fishbone Diagram digunakan pada step berapa?',o:['Step 1','Step 3','Step 4','Step 6'],a:2,exp:'Fishbone digunakan di Step 4.'},
-    {q:'UCL dan LCL dalam Control Chart adalah...',o:['Upper Cost Limit & Lower Cost Limit','Batas kendali atas & bawah','Nilai terbesar & terkecil','Target & minimum kualitas'],a:1,exp:'UCL/LCL = batas kendali atas dan bawah.'},
-    {q:'Berapa kategori 6M dalam Fishbone?',o:['4','5','6','7'],a:2,exp:'6M: Man, Machine, Method, Material, Measurement, Mother Nature.'}
-  ]},
-  {id:'b4',title:'Pengembangan Special Skill & Multi-Skill',cat:'QCC 2.0',color:'#00695c',tag:'D',builtin:true,desc:'Skill mapping, development plan, OJT',
-  sections:[{h:'Skill Development',b:'• Special Skill: Keahlian khusus pekerjaan utama\n• Multi-Skill: Kemampuan berbagai pekerjaan\n\nProses: Skill Mapping → Development Plan → Implementasi → Evaluasi Mandiri'}],
-  quiz:[
-    {q:'Skill Mapping adalah...',o:['Peta lokasi training','Identifikasi kemampuan & gap yang perlu dikembangkan','Daftar skill yang sudah dikuasai','Program training terjadwal'],a:1,exp:'Skill Mapping = identifikasi kemampuan yang dimiliki dan gap yang perlu dikembangkan.'},
-    {q:'Metode belajar sambil bekerja langsung?',o:['Training Formal','Self Learning','On the Job Training (OJT)','Job Rotation'],a:2,exp:'OJT = belajar langsung di tempat kerja.'},
-    {q:'Rencana pengembangan skill disepakati oleh...',o:['Hanya member','Hanya Circle Leader','Member dan Circle Leader bersama','Manager dan HR'],a:2,exp:'Development Plan disepakati bersama member dan Circle Leader.'}
-  ]},
-  {id:'b5',title:'Skill & Kemampuan Ber-Kaizen',cat:'QCC 2.0',color:'#c62828',tag:'E',builtin:true,desc:'Filosofi kaizen, ide improvement, standarisasi',
-  sections:[
-    {h:'Kaizen',b:'Kaizen (改善) = perubahan untuk menjadi lebih baik. Setiap orang bisa berkontribusi, perubahan kecil konsisten menghasilkan dampak besar.'},
-    {h:'Standarisasi Improvement',b:'Setelah improvement berhasil:\n1. Evaluasi sebelum vs sesudah\n2. Dokumentasikan dalam standard kerja\n3. Sosialisasikan ke semua member\n4. Pastikan tidak kembali ke kondisi awal'}
-  ],
-  quiz:[
-    {q:"Arti 'Kaizen' dalam bahasa Jepang?",o:['Standar kerja','Perubahan untuk menjadi lebih baik','Aktivitas kelompok','Kontrol kualitas'],a:1,exp:'Kaizen (改善) = perubahan untuk menjadi lebih baik.'},
-    {q:'Setelah improvement berhasil, yang WAJIB dilakukan?',o:['Lanjut improvement berikutnya','Standarisasi agar berkelanjutan','Lapor ke kantor pusat','Hentikan QCC'],a:1,exp:'Standarisasi wajib dilakukan agar tidak kembali ke kondisi semula.'},
-    {q:'Ide improvement yang baik harus...',o:['Mahal dan teknologi tinggi','Berbasis fakta dan data','Dilakukan leader saja','Mengganti semua proses'],a:1,exp:'Ide improvement harus berbasis fakta dan data, bukan asumsi.'}
-  ]}
-];
+//const BUILTIN=[
+//  {id:'b1',title:'Konsep Dasar QC & Step Problem Solving',cat:'QCC 2.0',color:'#0f2d52',tag:'A',builtin:true,desc:'Fondasi QCC: pengertian, tujuan, 8 step problem solving',
+// sections:[
+//    {h:'Pengertian QCC',b:'QCC (Quality Control Circle) adalah aktivitas kelompok kecil beranggotakan 5–10 orang dari tempat kerja yang sama, untuk menyelesaikan keluhan/kesulitan melalui 8 Step Problem Solving yang terstruktur.'},
+//    {h:'Tujuan Aktivitas QCC',b:'1. Meningkatkan kemampuan individual member dan membantu aktualisasi diri.\n2. Menciptakan tempat kerja yang positif di mana setiap member merasa dihargai.\n3. Memberikan kontribusi untuk meningkatkan budaya dan struktur perusahaan.'},
+//    {h:'8 Step Problem Solving',b:'Step 0-1: Pemilihan Thema\nStep 0-2: Rencana Aktivitas\nStep 1: Klarifikasi Masalah\nStep 2: Analisa Kondisi yang Ada (3G)\nStep 3: Penetapan Target\nStep 4: Analisa Sebab Akibat (Fishbone)\nStep 5: Rencana Penanggulangan (5W1H)\nStep 6: Penanggulangan\nStep 7: Evaluasi Hasil\nStep 8: Standarisasi & Tindak Lanjut'},
+//    {h:'Konsep 3G',b:'• Genba (現場) – Pergi ke tempat kerja langsung\n• Genji (現実) – Lihat kondisi aktual\n• Genbutsu (現物) – Periksa benda/material yang terlibat'}
+//  ],
+//  quiz:[
+//    {q:'Berapa jumlah anggota ideal dalam satu circle QCC?',o:['2–4 orang','5–10 orang','10–20 orang','Tidak ada batasan'],a:1,exp:'QCC beranggotakan 5–10 orang dari tempat kerja yang sama.'},
+//   {q:'Pada step berapa dilakukan Penetapan Target dalam QCC 2.0?',o:['Step 1','Step 2','Step 3','Step 4'],a:2,exp:'Step 3 adalah Penetapan Target.'},
+//    {q:'Metode apa yang digunakan pada Step 5?',o:['5S','5W1H','PDCA','FMEA'],a:1,exp:'Step 5 menggunakan metode 5W1H.'},
+//    {q:'Genbutsu dalam 3G berarti...',o:['Pergi ke tempat kerja','Lihat kondisi aktual','Periksa benda/material','Catat data'],a:2,exp:'Genbutsu = periksa benda/material yang terlibat secara langsung.'}
+//  ]},
+//  {id:'b2',title:'Manajemen & Aktivitas QCC (CLMA)',cat:'QCC 2.0',color:'#1565c0',tag:'B',builtin:true,desc:'CLMA, level assessment, peran Circle Leader',
+//  sections:[
+//    {h:'Circle Leader Managing Activity (CLMA)',b:'CLMA adalah aktivitas utama Circle Leader berfokus pada People Development: assessment kemampuan member, development plan, dan monitoring progress.'},
+//    {h:'Level Assessment',b:'5 area (Sumbu X):\nA. Konsep dasar QC\nB. Manajemen QCC\nC. QC Tools\nD. Skill Development\nE. Kaizen\n\nLevel:\n≤30% = Level 1\n31–50% = Level 2\n51–75% = Level 3\n76–85% = Level 4\n86–100% = Level 5'}
+//  ],
+//  quiz:[
+//    {q:'CLMA adalah singkatan dari...',o:['Circle Leader Main Activity','Circle Leader Managing Activity','Control Level Management','Circle Level Monitoring'],a:1,exp:'CLMA = Circle Leader Managing Activity.'},
+//    {q:'Persentase untuk Level 3?',o:['≤30%','31–50%','51–75%','76–85%'],a:2,exp:'Level 3 = 51–75%.'},
+//    {q:'Minimal jam meeting QCC per bulan?',o:['1 jam','2 jam','4 jam','8 jam'],a:1,exp:'Meeting QCC minimal 2 jam per bulan.'}
+//  ]},
+//  {id:'b3',title:'Aplikasi QC Tools (7 Tools)',cat:'QCC 2.0',color:'#7b1fa2',tag:'C',builtin:true,desc:'7 alat analisa: Pareto, Fishbone, Control Chart, dll.',
+//  sections:[
+//    {h:'7 QC Tools',b:'1. Check Sheet – Formulir pencatatan data sistematis\n2. Grafik Garis & Balok – Visualisasi tren & perbandingan\n3. Diagram Pareto – Prioritas masalah (80/20)\n4. Fishbone (Ishikawa) – Analisa akar masalah (6M)\n5. Histogram – Distribusi data\n6. Scatter Diagram – Hubungan dua variabel\n7. Control Chart – Pemantauan stabilitas proses (UCL/LCL)'}
+//  ],
+//  quiz:[
+//    {q:'Tool QC untuk identifikasi PRIORITAS masalah?',o:['Check Sheet','Diagram Pareto','Control Chart','Scatter Diagram'],a:1,exp:'Diagram Pareto menggunakan prinsip 80/20.'},
+//    {q:'Fishbone Diagram digunakan pada step berapa?',o:['Step 1','Step 3','Step 4','Step 6'],a:2,exp:'Fishbone digunakan di Step 4.'},
+//    {q:'UCL dan LCL dalam Control Chart adalah...',o:['Upper Cost Limit & Lower Cost Limit','Batas kendali atas & bawah','Nilai terbesar & terkecil','Target & minimum kualitas'],a:1,exp:'UCL/LCL = batas kendali atas dan bawah.'},
+//    {q:'Berapa kategori 6M dalam Fishbone?',o:['4','5','6','7'],a:2,exp:'6M: Man, Machine, Method, Material, Measurement, Mother Nature.'}
+//  ]},
+//  {id:'b4',title:'Pengembangan Special Skill & Multi-Skill',cat:'QCC 2.0',color:'#00695c',tag:'D',builtin:true,desc:'Skill mapping, development plan, OJT',
+//  sections:[{h:'Skill Development',b:'• Special Skill: Keahlian khusus pekerjaan utama\n• Multi-Skill: Kemampuan berbagai pekerjaan\n\nProses: Skill Mapping → Development Plan → Implementasi → Evaluasi Mandiri'}],
+//  quiz:[
+//    {q:'Skill Mapping adalah...',o:['Peta lokasi training','Identifikasi kemampuan & gap yang perlu dikembangkan','Daftar skill yang sudah dikuasai','Program training terjadwal'],a:1,exp:'Skill Mapping = identifikasi kemampuan yang dimiliki dan gap yang perlu dikembangkan.'},
+//    {q:'Metode belajar sambil bekerja langsung?',o:['Training Formal','Self Learning','On the Job Training (OJT)','Job Rotation'],a:2,exp:'OJT = belajar langsung di tempat kerja.'},
+//    {q:'Rencana pengembangan skill disepakati oleh...',o:['Hanya member','Hanya Circle Leader','Member dan Circle Leader bersama','Manager dan HR'],a:2,exp:'Development Plan disepakati bersama member dan Circle Leader.'}
+//  ]},
+//  {id:'b5',title:'Skill & Kemampuan Ber-Kaizen',cat:'QCC 2.0',color:'#c62828',tag:'E',builtin:true,desc:'Filosofi kaizen, ide improvement, standarisasi',
+//  sections:[
+//    {h:'Kaizen',b:'Kaizen (改善) = perubahan untuk menjadi lebih baik. Setiap orang bisa berkontribusi, perubahan kecil konsisten menghasilkan dampak besar.'},
+//    {h:'Standarisasi Improvement',b:'Setelah improvement berhasil:\n1. Evaluasi sebelum vs sesudah\n2. Dokumentasikan dalam standard kerja\n3. Sosialisasikan ke semua member\n4. Pastikan tidak kembali ke kondisi awal'}
+//  ],
+//  quiz:[
+//    {q:"Arti 'Kaizen' dalam bahasa Jepang?",o:['Standar kerja','Perubahan untuk menjadi lebih baik','Aktivitas kelompok','Kontrol kualitas'],a:1,exp:'Kaizen (改善) = perubahan untuk menjadi lebih baik.'},
+//    {q:'Setelah improvement berhasil, yang WAJIB dilakukan?',o:['Lanjut improvement berikutnya','Standarisasi agar berkelanjutan','Lapor ke kantor pusat','Hentikan QCC'],a:1,exp:'Standarisasi wajib dilakukan agar tidak kembali ke kondisi semula.'},
+//    {q:'Ide improvement yang baik harus...',o:['Mahal dan teknologi tinggi','Berbasis fakta dan data','Dilakukan leader saja','Mengganti semua proses'],a:1,exp:'Ide improvement harus berbasis fakta dan data, bukan asumsi.'}
+//  ]}
+//];
 
 // ─── STATE ───────────────────────────────────────────────────────────────────
 let ST={user:null,mod:null,progress:{},qs:{idx:0,ans:[],done:false},customMods:[],uploadState:{color:'#0f2d52',matTab:'file',fileData:null,fileType:null,fileName:null,fileMime:null},adTab:'modules'};
