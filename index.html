@@ -249,6 +249,18 @@ label.lbl{font-size:12px;font-weight:500;color:var(--txt2);margin-bottom:5px;dis
     </div>
     <p style="font-size:12px;color:var(--txt2);margin-bottom:14px">QCC 2.0, SS, PPS, 5S, Kaizen, dan metode improvement lainnya</p>
     <div class="mods-grid" id="mods-grid"></div>
+    <div style="margin-top:28px">
+      <h3 style="margin-bottom:4px"><i class="ti ti-trophy" style="color:#f59e0b"></i> Leaderboard</h3>
+      <p style="font-size:12px;color:var(--txt2);margin-bottom:14px">Peringkat berdasarkan hasil semua tes yang telah dikerjakan</p>
+      <div id="leaderboard-tabs" style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap">
+        <button class="btn btn-sm on" onclick="showLB('overall',this)" id="lb-btn-overall">🏆 Overall</button>
+        <button class="btn btn-sm ghost" onclick="showLB('pretest',this)">📋 Pre-Test</button>
+        <button class="btn btn-sm ghost" onclick="showLB('posttest',this)">✅ Post-Test</button>
+        <button class="btn btn-sm ghost" onclick="showLB('exercise',this)">💪 Exercise</button>
+        <button class="btn btn-sm ghost" onclick="showLB('improvement',this)">📈 Peningkatan</button>
+      </div>
+      <div id="leaderboard-content"></div>
+    </div>
   </div>
 </div>
 
@@ -269,7 +281,7 @@ label.lbl{font-size:12px;font-weight:500;color:var(--txt2);margin-bottom:5px;dis
     <p id="r-mod-desc" style="font-size:12px;color:var(--txt2);margin-bottom:18px"></p>
     <div id="r-content"></div>
     <div style="display:flex;gap:10px;margin-top:20px;flex-wrap:wrap">
-      <button class="btn btn-primary" onclick="goQuiz()"><i class="ti ti-help-circle"></i> Mulai Kuis</button>
+      <button class="btn btn-primary" onclick="goQuiz()"><i class="ti ti-help-circle"></i> Mulai Kuis / Tes</button>
       <button class="btn" onclick="goForum()"><i class="ti ti-messages"></i> Forum Diskusi</button>
     </div>
   </div>
@@ -305,6 +317,7 @@ label.lbl{font-size:12px;font-weight:500;color:var(--txt2);margin-bottom:5px;dis
   </div>
   <div class="result-wrap">
     <div class="card" style="text-align:center;margin-bottom:14px">
+      <div id="res-quiz-type" style="margin-bottom:10px"></div>
       <h2 style="margin-bottom:14px" id="res-mod"></h2>
       <div class="score-ring" id="res-ring"><span class="score-num" id="res-pct"></span><span style="font-size:11px;color:var(--txt2)">Skor</span></div>
       <div style="color:var(--txt2);font-size:13px;margin-bottom:10px" id="res-raw"></div>
@@ -347,7 +360,7 @@ label.lbl{font-size:12px;font-weight:500;color:var(--txt2);margin-bottom:5px;dis
     </div>
     <div id="ans-review"></div>
     <div style="display:flex;gap:10px;margin-top:20px;flex-wrap:wrap">
-      <button class="btn btn-amber" onclick="retakeQuiz()"><i class="ti ti-refresh"></i> Ulangi Kuis</button>
+      <button class="btn btn-amber" onclick="goQuiz()"><i class="ti ti-refresh"></i> Tes / Kuis Lagi</button>
       <button class="btn" onclick="showV('dashboard');loadDash()"><i class="ti ti-arrow-left"></i> Dashboard</button>
     </div>
   </div>
@@ -717,6 +730,8 @@ function loadDash(){
   document.getElementById('d-stats').innerHTML=`
     <div style="background:var(--bg-primary);border:0.5px solid var(--border);border-radius:var(--r-md);padding:10px 16px;text-align:center"><span style="font-size:20px;font-weight:500;display:block">${done}/${mods.length}</span><span style="font-size:11px;color:var(--txt2)">Modul Selesai</span></div>
     <div style="background:var(--bg-primary);border:0.5px solid var(--border);border-radius:var(--r-md);padding:10px 16px;text-align:center"><span style="font-size:20px;font-weight:500;display:block;color:var(--green)">${avg}%</span><span style="font-size:11px;color:var(--txt2)">Rata-rata Skor</span></div>`;
+  // Load leaderboard
+  S.gs('ti:all_results').then(res=>{window._allResults=res||[];showLB('overall',document.getElementById('lb-btn-overall'));});
   document.getElementById('mods-grid').innerHTML=mods.map(m=>{
     const p=ST.progress[m.id];const pct=p?p.pct:0;
     return`<div class="mod-card" onclick="openMod('${m.id}')">
@@ -730,6 +745,42 @@ function loadDash(){
       <div class="prog-bar"><div class="prog-fill" style="width:${pct}%;background:${m.color}"></div></div>
       <div style="font-size:10px;color:var(--txt3);margin-top:3px">${p?'✓ Selesai':'Belum dimulai'}</div>
     </div>`}).join('');
+}
+
+function showLB(type,btn){
+  document.querySelectorAll('#leaderboard-tabs .btn').forEach(b=>{b.classList.remove('on');b.classList.add('ghost');});
+  if(btn){btn.classList.add('on');btn.classList.remove('ghost');}
+  const res=window._allResults||[];
+  const medals=['🥇','🥈','🥉'];
+  const row=(rank,name,dept,val,sub)=>`<div style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--card);border-radius:8px;margin-bottom:6px">
+    <span style="font-size:${rank<3?'20':'14'}px;min-width:28px;text-align:center">${medals[rank]||('#'+(rank+1))}</span>
+    <div style="flex:1"><div style="font-weight:600;font-size:13px">${name}</div><div style="font-size:11px;color:var(--txt2)">${dept}</div></div>
+    <div style="text-align:right"><div style="font-weight:700;font-size:15px;color:var(--navy)">${val}</div><div style="font-size:10px;color:var(--txt3)">${sub}</div></div>
+  </div>`;
+  let html='';
+  if(!res.length){document.getElementById('leaderboard-content').innerHTML='<p style="color:var(--txt2);font-size:13px;padding:12px">Belum ada data hasil tes.</p>';return;}
+  if(type==='overall'){
+    // Rata-rata skor semua tes per orang
+    const byNIK={};res.forEach(r=>{if(!byNIK[r.NIK])byNIK[r.NIK]={name:r.name,dept:r.dept||'',scores:[]};byNIK[r.NIK].scores.push(r.pct);});
+    const ranked=Object.values(byNIK).map(x=>({...x,avg:Math.round(x.scores.reduce((s,v)=>s+v,0)/x.scores.length),count:x.scores.length})).sort((a,b)=>b.avg-a.avg);
+    html=ranked.slice(0,10).map((x,i)=>row(i,x.name,x.dept,x.avg+'%',x.count+' tes')).join('');
+  } else if(type==='improvement'){
+    // Selisih post-test tertinggi vs pre-test per orang per modul
+    const key=r=>r.NIK+'|'+r.moduleId;
+    const pre={},post={};
+    res.forEach(r=>{if(r.quizType==='pretest'){if(!pre[key(r)]||r.pct>pre[key(r)].pct)pre[key(r)]=r;}
+      if(r.quizType==='posttest'){if(!post[key(r)]||r.pct>post[key(r)].pct)post[key(r)]=r;}});
+    const impr=[];Object.keys(post).forEach(k=>{if(pre[k]){impr.push({name:post[k].name,dept:post[k].dept||'',module:post[k].moduleName,delta:post[k].pct-pre[k].pct,pre:pre[k].pct,post:post[k].pct});}});
+    impr.sort((a,b)=>b.delta-a.delta);
+    html=impr.length?impr.slice(0,10).map((x,i)=>row(i,x.name,x.dept+(x.module?' • '+x.module:''),'+'+x.delta+'%',`Pre: ${x.pre}% → Post: ${x.post}%`)).join(''):'<p style="color:var(--txt2);font-size:13px;padding:12px">Belum ada data pre-test + post-test.</p>';
+  } else {
+    // Skor tertinggi per jenis tes per orang
+    const filtered=res.filter(r=>r.quizType===type);
+    const byNIK={};filtered.forEach(r=>{if(!byNIK[r.NIK]||r.pct>byNIK[r.NIK].pct)byNIK[r.NIK]={name:r.name,dept:r.dept||'',pct:r.pct,module:r.moduleName};});
+    const ranked=Object.values(byNIK).sort((a,b)=>b.pct-a.pct);
+    html=ranked.length?ranked.slice(0,10).map((x,i)=>row(i,x.name,x.dept,x.pct+'%',x.module)).join(''):'<p style="color:var(--txt2);font-size:13px;padding:12px">Belum ada data untuk jenis tes ini.</p>';
+  }
+  document.getElementById('leaderboard-content').innerHTML=html;
 }
 
 // ─── READER ──────────────────────────────────────────────────────────────────
@@ -780,23 +831,53 @@ async function renderContent(m){
   }else{el.innerHTML='<p style="color:var(--txt2);padding:20px">Tidak ada materi untuk ditampilkan.</p>';}
 }
 function toggleSec(i){const b=document.getElementById('sb-'+i);const ic=document.getElementById('si-'+i);if(b.classList.contains('open')){b.classList.remove('open');ic.style.transform='rotate(0deg)';}else{b.classList.add('open');ic.style.transform='rotate(180deg)';}}
-function goQuiz(){if(!ST.mod?.quiz?.length&&!ST.mod?.bankSoal?.length){toast('⚠ Modul ini belum memiliki soal kuis');return;}showV('quiz');startQuiz();}
+const QUIZ_TYPES={
+  pretest: {label:'Pre-Test',desc:'Uji pengetahuan SEBELUM belajar materi',icon:'ti-player-skip-back',count:10,color:'#0891b2'},
+  exercise:{label:'Exercise',desc:'Latihan soal untuk memperdalam materi',icon:'ti-barbell',count:25,color:'#7c3aed'},
+  posttest:{label:'Post-Test',desc:'Uji pengetahuan SETELAH belajar materi',icon:'ti-player-skip-forward',count:10,color:'#059669'},
+};
+function goQuiz(){
+  const m=ST.mod;
+  if(!m?.quiz?.length&&!m?.bankSoal?.length){toast('⚠ Modul ini belum memiliki soal kuis');return;}
+  const pool=(m.bankSoal&&m.bankSoal.length?m.bankSoal:m.quiz)||[];
+  const overlay=document.createElement('div');
+  overlay.id='quiz-type-overlay';
+  overlay.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:9999;display:flex;align-items:center;justify-content:center;padding:16px';
+  const cards=Object.entries(QUIZ_TYPES).map(([key,t])=>{
+    const avail=pool.length>=t.count;
+    return`<div onclick="${avail?`startQuizType('${key}')`:''}" style="padding:14px;border:2px solid ${avail?t.color:'#e5e7eb'};border-radius:10px;margin-bottom:10px;cursor:${avail?'pointer':'not-allowed'};opacity:${avail?1:0.5}" onmouseover="if(${avail})this.style.background='${t.color}15'" onmouseout="this.style.background=''">
+      <div style="display:flex;align-items:center;gap:10px">
+        <div style="width:38px;height:38px;border-radius:8px;background:${t.color}20;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="ti ${t.icon}" style="font-size:20px;color:${t.color}"></i></div>
+        <div style="flex:1"><div style="font-weight:700;font-size:14px;color:#111">${t.label} <span style="font-size:12px;font-weight:400;color:#6b7280">(${t.count} soal)</span></div>
+          <div style="font-size:12px;color:#6b7280">${t.desc}</div></div>
+        ${avail?`<i class="ti ti-chevron-right" style="color:${t.color}"></i>`:`<span style="font-size:11px;color:#9ca3af">Perlu ${t.count} soal</span>`}
+      </div></div>`;}).join('');
+  overlay.innerHTML=`<div style="background:#fff;border-radius:12px;max-width:480px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,.4)">
+    <div style="padding:18px 20px;background:#0f2d52;border-radius:12px 12px 0 0">
+      <div style="color:#fff;font-weight:700;font-size:15px"><i class="ti ti-help-circle"></i> Pilih Jenis Tes</div>
+      <div style="color:rgba(255,255,255,.7);font-size:12px;margin-top:2px">${m.title} &bull; ${pool.length} soal tersedia</div>
+    </div>
+    <div style="padding:16px 20px">${cards}</div>
+    <div style="padding:0 20px 16px"><button onclick="document.getElementById('quiz-type-overlay').remove()" style="width:100%;padding:8px;border:1px solid #d1d5db;border-radius:8px;background:#f9fafb;cursor:pointer;font-size:13px">Batal</button></div>
+  </div>`;
+  document.body.appendChild(overlay);
+}
+function startQuizType(type){const el=document.getElementById('quiz-type-overlay');if(el)el.remove();showV('quiz');startQuiz(type);}
 function goForum(){showV('forum');loadForum();}
 function backForum(){const p=ST.progress[ST.mod?.id];showV(p?'result':'reader');if(p)showResult();}
 
 // ─── QUIZ ────────────────────────────────────────────────────────────────────
-function pickQuizQuestions(m){
-  // Jika ada bank soal AI, ambil acak QUIZ_BANK_SIZE soal; fallback ke quiz manual
-  if(m.bankSoal&&m.bankSoal.length){
-    const size=Math.min(10,m.bankSoal.length);
-    const shuffled=[...m.bankSoal].sort(()=>Math.random()-0.5);
-    return shuffled.slice(0,size);
-  }
-  return m.quiz||[];
+function pickQuizQuestions(m,count){
+  const pool=(m.bankSoal&&m.bankSoal.length?m.bankSoal:m.quiz)||[];
+  const n=Math.min(count||10,pool.length);
+  return [...pool].sort(()=>Math.random()-0.5).slice(0,n);
 }
-function startQuiz(){
-  const questions=pickQuizQuestions(ST.mod);
-  ST.qs={idx:0,ans:[],done:false,questions};
+function startQuiz(type='exercise'){
+  const t=QUIZ_TYPES[type]||QUIZ_TYPES.exercise;
+  const questions=pickQuizQuestions(ST.mod,t.count);
+  ST.qs={idx:0,ans:[],done:false,questions,type};
+  // Tampilkan label jenis tes di topbar
+  document.querySelector('#quiz .brand').innerHTML=`<i class="ti ti-help-circle"></i> ${t.label} <span style="font-size:12px;font-weight:400;opacity:.7">${ST.mod.title}</span>`;
   renderQ();
 }
 function renderQ(){
@@ -826,7 +907,8 @@ async function finishQuiz(){
   const m=ST.mod;const sc=ST.qs.ans.filter(a=>a&&a.isCorrect).length;const tot=ST.qs.questions.length;const pct=Math.round(sc/tot*100);
   const np={...ST.progress,[m.id]:{score:sc,total:tot,pct,answers:ST.qs.ans,completedAt:new Date().toISOString()}};
   ST.progress=np;await S.s('ti:prog:'+ST.user.NIK,np);
-  const result={id:Date.now(),name:ST.user.name,NIK:ST.user.NIK,email:ST.user.email,dept:ST.user.dept,moduleId:m.id,moduleName:m.title,moduleCat:m.cat,score:sc,total:tot,pct,completedAt:new Date().toISOString()};
+  const quizType=ST.qs.type||'exercise';
+  const result={id:Date.now(),name:ST.user.name,NIK:ST.user.NIK,email:ST.user.email,dept:ST.user.dept,moduleId:m.id,moduleName:m.title,moduleCat:m.cat,score:sc,total:tot,pct,quizType,completedAt:new Date().toISOString()};
   let results=await S.gs('ti:all_results')||[];results.push(result);await S.ss('ti:all_results',results);
   showResult();showV('result');
   // Kirim ke Sheets + email; update tombol sertifikat saat selesai
@@ -834,10 +916,14 @@ async function finishQuiz(){
 }
 function showResult(){
   const p=ST.progress[ST.mod.id];const m=ST.mod;if(!p)return;
+  const qt=ST.qs?.type||'exercise';const qtInfo=QUIZ_TYPES[qt]||QUIZ_TYPES.exercise;
   document.getElementById('res-mod').textContent=m.title;
   document.getElementById('res-ring').style.borderColor=p.pct>=76?'var(--green)':p.pct>=51?'var(--amber)':'var(--red)';
   document.getElementById('res-pct').textContent=p.pct+'%';
   document.getElementById('res-raw').textContent=p.score+' dari '+p.total+' soal benar';
+  // Tampilkan badge jenis tes
+  const badgeEl=document.getElementById('res-quiz-type');
+  if(badgeEl)badgeEl.innerHTML=`<span style="display:inline-flex;align-items:center;gap:5px;padding:4px 12px;border-radius:20px;background:${qtInfo.color}20;color:${qtInfo.color};font-size:12px;font-weight:600;border:1px solid ${qtInfo.color}40"><i class="ti ${qtInfo.icon}"></i> ${qtInfo.label}</span>`;
   let lv,lc,msg;
   if(p.pct<=30){lv='Level 1';lc='b-red';msg='Pelajari kembali materi dan coba lagi.';}
   else if(p.pct<=50){lv='Level 2';lc='b-amber';msg='Pemahaman dasar ada. Pelajari bagian yang salah.';}
