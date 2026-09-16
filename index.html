@@ -1009,29 +1009,93 @@ async function delMod(id){
   await syncDeleteModule(id); // hapus dari Google Sheets
   loadAdmin();toast('✓ Modul berhasil dihapus');
 }
+let _reviewId=null,_reviewSoal=[];
 function reviewSoal(id){
   const m=allMods().find(x=>x.id===id);if(!m)return;
-  const soal=m.bankSoal&&m.bankSoal.length?m.bankSoal:m.quiz||[];
-  if(!soal.length){toast('⚠ Belum ada soal');return;}
+  _reviewId=id;
+  _reviewSoal=JSON.parse(JSON.stringify(m.bankSoal&&m.bankSoal.length?m.bankSoal:m.quiz||[]));
+  if(!_reviewSoal.length){toast('⚠ Belum ada soal');return;}
+  _renderReview(m);
+}
+function _renderReview(m){
+  const existing=document.getElementById('review-overlay');if(existing)existing.remove();
   const opts=['A','B','C','D'];
-  const html=soal.map((q,i)=>`
-    <div style="margin-bottom:16px;padding:12px;background:var(--card);border-radius:8px;border-left:3px solid var(--navy)">
-      <div style="font-weight:600;margin-bottom:8px;font-size:13px">${i+1}. ${q.q}</div>
-      ${(q.o||[]).map((o,j)=>`<div style="padding:4px 8px;border-radius:4px;margin-bottom:4px;font-size:12px;${j===q.a?'background:#d1fae5;color:#065f46;font-weight:600':'color:var(--txt2)'}">
-        ${j===q.a?'✓ ':''}${opts[j]}. ${o}</div>`).join('')}
-      ${q.exp?`<div style="margin-top:8px;font-size:11px;color:var(--txt2);font-style:italic">💡 ${q.exp}</div>`:''}
+  const html=_reviewSoal.map((q,i)=>`
+    <div id="rv-${i}" style="margin-bottom:16px;padding:14px;background:#fff;border-radius:8px;border:1px solid #e5e7eb;border-left:4px solid #0f2d52">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">
+        <span style="font-weight:700;font-size:12px;color:#6b7280">Soal ${i+1}</span>
+        <div style="display:flex;gap:6px">
+          <button onclick="rvEdit(${i})" style="font-size:11px;padding:3px 8px;border:1px solid #d1d5db;border-radius:4px;background:#f9fafb;cursor:pointer;color:#374151"><i class="ti ti-edit"></i> Edit</button>
+          <button onclick="rvDel(${i})" style="font-size:11px;padding:3px 8px;border:1px solid #fca5a5;border-radius:4px;background:#fef2f2;cursor:pointer;color:#dc2626"><i class="ti ti-trash"></i></button>
+        </div>
+      </div>
+      <div style="font-weight:600;font-size:13px;color:#111827;margin-bottom:10px">${q.q}</div>
+      ${(q.o||[]).map((o,j)=>`<div style="padding:6px 10px;border-radius:6px;margin-bottom:4px;font-size:12px;${j===q.a?'background:#d1fae5;color:#065f46;font-weight:700;border:1px solid #6ee7b7':'background:#f9fafb;color:#6b7280;border:1px solid #e5e7eb'}">
+        ${j===q.a?'✓ ':''}<b>${opts[j]}.</b> ${o}</div>`).join('')}
+      ${q.exp?`<div style="margin-top:8px;font-size:11px;color:#6b7280;padding:6px 8px;background:#f0f9ff;border-radius:4px">💡 ${q.exp}</div>`:''}
     </div>`).join('');
   const overlay=document.createElement('div');
-  overlay.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9999;display:flex;align-items:center;justify-content:center;padding:16px';
-  overlay.innerHTML=`<div style="background:var(--bg);border-radius:12px;max-width:680px;width:100%;max-height:85vh;display:flex;flex-direction:column">
-    <div style="padding:16px 20px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;flex-shrink:0">
-      <div><strong>${m.title}</strong> <span style="font-size:12px;color:var(--txt2)">${soal.length} soal ${m.bankSoal&&m.bankSoal.length?'🤖 AI':''}</span></div>
-      <button class="btn btn-sm ghost" onclick="this.closest('div[style*=fixed]').remove()"><i class="ti ti-x"></i></button>
+  overlay.id='review-overlay';
+  overlay.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:9999;display:flex;align-items:center;justify-content:center;padding:16px';
+  overlay.innerHTML=`<div style="background:#f8fafc;border-radius:12px;max-width:700px;width:100%;max-height:88vh;display:flex;flex-direction:column;box-shadow:0 20px 60px rgba(0,0,0,.4)">
+    <div style="padding:16px 20px;background:#0f2d52;border-radius:12px 12px 0 0;display:flex;justify-content:space-between;align-items:center;flex-shrink:0">
+      <div style="color:#fff"><strong>${m?m.title:''}</strong> <span style="font-size:12px;opacity:.8">${_reviewSoal.length} soal ${m&&m.bankSoal&&m.bankSoal.length?'🤖 AI':''}</span></div>
+      <button onclick="document.getElementById('review-overlay').remove()" style="background:rgba(255,255,255,.2);border:none;color:#fff;border-radius:6px;padding:4px 10px;cursor:pointer;font-size:18px">✕</button>
     </div>
-    <div style="padding:16px 20px;overflow-y:auto">${html}</div>
+    <div style="padding:16px 20px;overflow-y:auto;flex:1">${html}</div>
+    <div style="padding:12px 20px;border-top:1px solid #e5e7eb;display:flex;justify-content:flex-end;gap:8px;flex-shrink:0;background:#fff;border-radius:0 0 12px 12px">
+      <button onclick="document.getElementById('review-overlay').remove()" style="padding:7px 16px;border:1px solid #d1d5db;border-radius:6px;background:#fff;cursor:pointer;font-size:13px">Tutup</button>
+      <button onclick="rvSave()" style="padding:7px 16px;border:none;border-radius:6px;background:#0f2d52;color:#fff;cursor:pointer;font-size:13px;font-weight:600"><i class="ti ti-device-floppy"></i> Simpan Perubahan</button>
+    </div>
   </div>`;
   document.body.appendChild(overlay);
-  overlay.addEventListener('click',e=>{if(e.target===overlay)overlay.remove();});
+}
+function rvEdit(i){
+  const q=_reviewSoal[i];const opts=['A','B','C','D'];
+  const html=`<div style="padding:14px;background:#fff;border-radius:8px;border:2px solid #0f2d52">
+    <div style="font-weight:700;font-size:12px;color:#0f2d52;margin-bottom:8px">✏️ Edit Soal ${i+1}</div>
+    <div style="margin-bottom:8px"><label style="font-size:11px;color:#6b7280;display:block;margin-bottom:3px">Pertanyaan</label>
+      <textarea id="re-q" style="width:100%;border:1px solid #d1d5db;border-radius:6px;padding:6px;font-size:13px;resize:vertical">${q.q}</textarea></div>
+    ${q.o.map((o,j)=>`<div style="display:flex;align-items:center;gap:6px;margin-bottom:6px">
+      <input type="radio" name="re-ans" value="${j}" ${q.a===j?'checked':''} style="accent-color:#0f2d52">
+      <label style="font-size:12px;color:#374151;min-width:20px">${opts[j]}</label>
+      <input id="re-o${j}" type="text" value="${o}" style="flex:1;border:1px solid #d1d5db;border-radius:6px;padding:5px 8px;font-size:12px">
+    </div>`).join('')}
+    <div style="margin-bottom:10px"><label style="font-size:11px;color:#6b7280;display:block;margin-bottom:3px">Penjelasan jawaban</label>
+      <input id="re-exp" type="text" value="${q.exp||''}" style="width:100%;border:1px solid #d1d5db;border-radius:6px;padding:6px;font-size:12px"></div>
+    <div style="display:flex;gap:8px">
+      <button onclick="rvSaveEdit(${i})" style="padding:6px 14px;border:none;border-radius:6px;background:#0f2d52;color:#fff;cursor:pointer;font-size:12px">Simpan</button>
+      <button onclick="_renderReview(allMods().find(x=>x.id===_reviewId))" style="padding:6px 14px;border:1px solid #d1d5db;border-radius:6px;background:#fff;cursor:pointer;font-size:12px">Batal</button>
+    </div>
+  </div>`;
+  document.getElementById('rv-'+i).outerHTML=html;
+}
+function rvSaveEdit(i){
+  const q=_reviewSoal[i];
+  q.q=document.getElementById('re-q').value.trim();
+  q.o=q.o.map((_,j)=>document.getElementById('re-o'+j).value.trim());
+  const checked=document.querySelector('input[name="re-ans"]:checked');
+  if(checked)q.a=parseInt(checked.value);
+  q.exp=document.getElementById('re-exp').value.trim();
+  _renderReview(allMods().find(x=>x.id===_reviewId));
+}
+function rvDel(i){
+  if(!confirm('Hapus soal '+(i+1)+'?'))return;
+  _reviewSoal.splice(i,1);
+  _renderReview(allMods().find(x=>x.id===_reviewId));
+}
+async function rvSave(){
+  const m=ST.customMods.find(x=>x.id===_reviewId);if(!m)return;
+  if(m.bankSoal&&m.bankSoal.length)m.bankSoal=_reviewSoal;
+  else m.quiz=_reviewSoal;
+  await S.ss('ti:custom_mods',ST.customMods);
+  // sync ke Sheets
+  const sheet_row={id:m.id,title:m.title,cat:m.cat,desc:m.desc||'',color:m.color||'#0f2d52',
+    fileType:m.fileType||'',driveFileId:m.driveFileId||'',textContent:m.textContent||'',
+    sections:m.sections||[],quiz:m.quiz||[],bankSoal:m.bankSoal||null};
+  await apiPost({action:'save_custom_module',...sheet_row});
+  document.getElementById('review-overlay').remove();
+  loadAdmin();toast('✓ Soal berhasil disimpan');
 }
 function pickColor(el){document.querySelectorAll('.swatch').forEach(s=>s.classList.remove('picked'));el.classList.add('picked');ST.uploadState.color=el.dataset.c;}
 function umGoStep1(){document.getElementById('um-step1').style.display='block';document.getElementById('um-step2').style.display='none';document.getElementById('um-step3').style.display='none';}
