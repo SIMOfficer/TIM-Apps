@@ -440,7 +440,7 @@ label.lbl{font-size:12px;font-weight:500;color:var(--txt2);margin-bottom:5px;dis
           <div class="upload-zone" id="drop-zone" onclick="document.getElementById('file-input').click()" ondrop="handleDrop(event)" ondragover="event.preventDefault();this.classList.add('drag')" ondragleave="this.classList.remove('drag')">
             <i class="ti ti-cloud-upload"></i>
             <p style="font-weight:500;font-size:13px">Klik atau drag-drop file di sini</p>
-            <p style="font-size:11px;color:var(--txt2);margin-top:4px">Mendukung: PDF, JPG, PNG, GIF (Maks. 4 MB)</p>
+            <p style="font-size:11px;color:var(--txt2);margin-top:4px">Mendukung: PDF, JPG, PNG, GIF (Maks. 10 MB)</p>
           </div>
           <input type="file" id="file-input" accept=".pdf,.jpg,.jpeg,.png,.gif" style="display:none" onchange="handleFileSelect(this)">
           <div id="file-preview" style="display:none"></div>
@@ -1024,7 +1024,7 @@ function switchMatTab(tab){
 function handleFileSelect(input){if(input.files[0])processFile(input.files[0]);}
 function handleDrop(e){e.preventDefault();document.getElementById('drop-zone').classList.remove('drag');if(e.dataTransfer.files[0])processFile(e.dataTransfer.files[0]);}
 function processFile(file){
-  if(file.size>4*1024*1024){toast('⚠ File terlalu besar! Maks. 4 MB. Ukuran: '+Math.round(file.size/1024/1024*10)/10+' MB');return;}
+  if(file.size>10*1024*1024){toast('⚠ File terlalu besar! Maks. 10 MB. Ukuran: '+Math.round(file.size/1024/1024*10)/10+' MB');return;}
   const isPdf=file.type==='application/pdf';const isImg=file.type.startsWith('image/');
   if(!isPdf&&!isImg){toast('⚠ Format tidak didukung. Gunakan PDF, JPG, atau PNG');return;}
   const reader=new FileReader();
