@@ -1047,12 +1047,19 @@ async function saveModule(){
   const desc=document.getElementById('um-desc').value.trim();
   const tab=ST.uploadState.matTab;
   const id=editModId||('custom_'+Date.now());
+  // Ambil data lama jika edit, agar fileType/driveFileId/fileUrl tidak hilang saat tidak re-upload
+  const existingMod=editModId?ST.customMods.find(x=>x.id===editModId):null;
   const mod={id,title,cat,desc,color:ST.uploadState.color,tag:cat.substring(0,2).toUpperCase(),builtin:false,
     quiz:qbItems.map(q=>({q:q.q.trim(),o:q.o.map(o=>o.trim()),a:q.a,exp:q.exp||''})),
     createdAt:new Date().toISOString()};
   if(tab==='file'&&ST.uploadState.fileData){
+    // File baru di-upload
     mod.fileType=ST.uploadState.fileType;mod.fileName=ST.uploadState.fileName;
     await S.ss('ti:mat:'+id,{data:ST.uploadState.fileData,mime:ST.uploadState.fileMime});
+  }else if(tab==='file'&&existingMod){
+    // Edit tanpa re-upload: pertahankan file lama
+    mod.fileType=existingMod.fileType;mod.fileName=existingMod.fileName;
+    mod.driveFileId=existingMod.driveFileId;mod.fileUrl=existingMod.fileUrl;
   }else if(tab==='text'){
     mod.textContent=document.getElementById('mat-text').value.trim();mod.sections=[];
   }else if(tab==='sections'){
@@ -1060,19 +1067,24 @@ async function saveModule(){
     if(!secs.length){toast('⚠ Tambahkan minimal 1 bagian');return;}
     mod.sections=secs;
   }
-  // Tambahkan data file untuk upload ke Drive
+  // Tambahkan data file untuk upload ke Drive (hanya jika ada file baru)
   if(tab==='file'&&ST.uploadState.fileData){
     mod.fileData=ST.uploadState.fileData;
     mod.fileMime=ST.uploadState.fileMime;
   }
+  // Sertakan existingDriveFileId agar backend tidak override jika tidak ada upload baru
+  if(existingMod&&existingMod.driveFileId&&!ST.uploadState.fileData){
+    mod.existingDriveFileId=existingMod.driveFileId;
+  }
   // Kirim ke Apps Script (upload file ke Drive)
   toast('⏳ Menyimpan dan upload ke Google Drive...');
   const apiRes=await syncSaveModule(mod);
-  if(apiRes&&apiRes.driveFileId){
+  if(apiRes&&apiRes.driveFileId&&ST.uploadState.fileData){
+    // Hanya update driveFileId/fileUrl jika ada file baru yang diupload
     mod.driveFileId=apiRes.driveFileId;
     if(mod.fileType==='pdf') mod.fileUrl='https://drive.google.com/file/d/'+apiRes.driveFileId+'/preview';
     if(mod.fileType==='image') mod.fileUrl='https://lh3.googleusercontent.com/d/'+apiRes.driveFileId;
-    delete mod.fileData; // hapus base64 dari memori lokal (sudah di Drive)
+    delete mod.fileData;
   }
   if(editModId){ST.customMods=ST.customMods.map(m=>m.id===editModId?mod:m);}
   else{ST.customMods.push(mod);}
