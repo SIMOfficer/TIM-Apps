@@ -184,7 +184,7 @@ label.lbl{font-size:12px;font-weight:500;color:var(--txt2);margin-bottom:5px;dis
 <div id="splash" class="active-view">
   <div class="topbar">
     <div class="brand"><i class="ti ti-brain"></i> Training Improvement Mandiri</div>
-    <button class="btn btn-sm ghost" onclick="showV('admin');loadAdmin()"><i class="ti ti-shield"></i> Admin</button>
+    <button class="btn btn-sm ghost" onclick="goAdmin()"><i class="ti ti-shield"></i> Admin</button>
   </div>
   <div class="splash">
     <div class="splash-logo"><i class="ti ti-brain"></i></div>
@@ -231,7 +231,7 @@ label.lbl{font-size:12px;font-weight:500;color:var(--txt2);margin-bottom:5px;dis
     <div class="topbar-r">
       <div class="avatar" id="d-av">?</div>
       <span style="font-size:12px;color:rgba(255,255,255,.85)" id="d-name"></span>
-      <button class="btn btn-sm ghost" onclick="showV('admin');loadAdmin()"><i class="ti ti-shield"></i></button>
+      <button class="btn btn-sm ghost" onclick="goAdmin()"><i class="ti ti-shield"></i></button>
       <button class="btn btn-sm ghost" onclick="doLogout()"><i class="ti ti-logout"></i></button>
     </div>
   </div>
@@ -245,7 +245,7 @@ label.lbl{font-size:12px;font-weight:500;color:var(--txt2);margin-bottom:5px;dis
   <div class="dash-body">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
       <h3>Modul Tersedia</h3>
-      <button class="btn btn-sm" onclick="showV('admin');loadAdmin()"><i class="ti ti-table"></i> Rekap Data</button>
+      <button class="btn btn-sm" onclick="goAdmin()"><i class="ti ti-table"></i> Rekap Data</button>
     </div>
     <p style="font-size:12px;color:var(--txt2);margin-bottom:14px">QCC 2.0, SS, PPS, 5S, Kaizen, dan metode improvement lainnya</p>
     <div class="mods-grid" id="mods-grid"></div>
@@ -392,7 +392,7 @@ label.lbl{font-size:12px;font-weight:500;color:var(--txt2);margin-bottom:5px;dis
 <div id="upload-mod">
   <div class="topbar">
     <div class="brand"><i class="ti ti-upload"></i> <span id="um-mode-label">Tambah Modul Baru</span></div>
-    <button class="btn btn-sm ghost" onclick="showV('admin');loadAdmin()"><i class="ti ti-arrow-left"></i> Kembali</button>
+    <button class="btn btn-sm ghost" onclick="goAdmin()"><i class="ti ti-arrow-left"></i> Kembali</button>
   </div>
   <div class="upload-wrap">
     <div style="margin-bottom:20px">
@@ -903,6 +903,15 @@ async function postForum(){
 }
 
 // ─── ADMIN ───────────────────────────────────────────────────────────────────
+const ADMIN_PASS='admin123'; // ganti password sesuai kebutuhan
+function goAdmin(){
+  const stored=sessionStorage.getItem('ti:adm');
+  if(stored===ADMIN_PASS){showV('admin');loadAdmin();return;}
+  const pw=prompt('🔒 Masukkan password admin:');
+  if(pw===null)return; // batal
+  if(pw===ADMIN_PASS){sessionStorage.setItem('ti:adm',pw);showV('admin');loadAdmin();}
+  else{toast('⚠ Password salah');}
+}
 let admData={users:[],results:[],forum:[],mods:[]};
 async function loadAdmin(){
   admData.users=await S.gs('ti:all_users')||[];
@@ -933,7 +942,7 @@ function admTab(tab,btn){
     <td>${m.fileType==='pdf'?'<span class="badge b-purple">PDF</span>':m.fileType==='image'?'<span class="badge b-teal">Gambar</span>':'<span class="badge b-gray">Teks</span>'}</td>
     <td>${m.bankSoal&&m.bankSoal.length?m.bankSoal.length+' 🤖':(m.quiz?m.quiz.length:0)}</td>
     <td>${m.builtin?'<span class="badge b-blue">Default</span>':'<span class="badge b-amber">Custom</span>'}</td>
-    <td>${m.builtin?'—':`<button class="btn btn-sm" onclick="editMod('${m.id}')"><i class="ti ti-edit"></i></button> <button class="btn btn-sm btn-danger" onclick="delMod('${m.id}')"><i class="ti ti-trash"></i></button> <button class="btn btn-sm" style="background:#7c3aed;color:#fff;border-color:#6d28d9" title="${m.bankSoal?'Bank soal: '+m.bankSoal.length+' soal (klik untuk generate ulang)':'Generate soal AI dari materi'}" onclick="generateAIQuestions('${m.id}')"><i class="ti ti-sparkles"></i>${m.bankSoal?` ${m.bankSoal.length}✓`:' AI'}</button>`}</td></tr>`).join('')}
+    <td>${m.builtin?'—':`<button class="btn btn-sm" onclick="editMod('${m.id}')"><i class="ti ti-edit"></i></button> <button class="btn btn-sm btn-danger" onclick="delMod('${m.id}')"><i class="ti ti-trash"></i></button> ${(m.bankSoal&&m.bankSoal.length)||(m.quiz&&m.quiz.length)?`<button class="btn btn-sm" style="background:#0891b2;color:#fff;border-color:#0e7490" title="Review semua soal" onclick="reviewSoal('${m.id}')"><i class="ti ti-eye"></i></button> `:''}  <button class="btn btn-sm" style="background:#7c3aed;color:#fff;border-color:#6d28d9" title="${m.bankSoal?'Bank soal: '+m.bankSoal.length+' soal (klik untuk generate ulang)':'Generate soal AI dari materi'}" onclick="generateAIQuestions('${m.id}')"><i class="ti ti-sparkles"></i>${m.bankSoal?` ${m.bankSoal.length}✓`:' AI'}</button>`}</td></tr>`).join('')}
     </tbody></table></div>
     <div style="margin-top:12px"><button class="btn btn-sm" onclick="csvDl([['Judul','Kategori','Tipe','Soal','Jenis'],...allMods().map(m=>[m.title,m.cat,m.fileType||'teks',m.quiz?m.quiz.length:0,m.builtin?'Default':'Custom'])],'rekap_modul.csv')"><i class="ti ti-download"></i> Ekspor CSV</button></div>`;
   }else if(tab==='users'){
@@ -997,7 +1006,32 @@ async function delMod(id){
   if(!confirm('Hapus modul ini? Data forum terkait juga akan terpengaruh.'))return;
   ST.customMods=ST.customMods.filter(m=>m.id!==id);
   await S.ss('ti:custom_mods',ST.customMods);await S.ss('ti:mat:'+id,null);
+  await syncDeleteModule(id); // hapus dari Google Sheets
   loadAdmin();toast('✓ Modul berhasil dihapus');
+}
+function reviewSoal(id){
+  const m=allMods().find(x=>x.id===id);if(!m)return;
+  const soal=m.bankSoal&&m.bankSoal.length?m.bankSoal:m.quiz||[];
+  if(!soal.length){toast('⚠ Belum ada soal');return;}
+  const opts=['A','B','C','D'];
+  const html=soal.map((q,i)=>`
+    <div style="margin-bottom:16px;padding:12px;background:var(--card);border-radius:8px;border-left:3px solid var(--navy)">
+      <div style="font-weight:600;margin-bottom:8px;font-size:13px">${i+1}. ${q.q}</div>
+      ${(q.o||[]).map((o,j)=>`<div style="padding:4px 8px;border-radius:4px;margin-bottom:4px;font-size:12px;${j===q.a?'background:#d1fae5;color:#065f46;font-weight:600':'color:var(--txt2)'}">
+        ${j===q.a?'✓ ':''}${opts[j]}. ${o}</div>`).join('')}
+      ${q.exp?`<div style="margin-top:8px;font-size:11px;color:var(--txt2);font-style:italic">💡 ${q.exp}</div>`:''}
+    </div>`).join('');
+  const overlay=document.createElement('div');
+  overlay.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9999;display:flex;align-items:center;justify-content:center;padding:16px';
+  overlay.innerHTML=`<div style="background:var(--bg);border-radius:12px;max-width:680px;width:100%;max-height:85vh;display:flex;flex-direction:column">
+    <div style="padding:16px 20px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;flex-shrink:0">
+      <div><strong>${m.title}</strong> <span style="font-size:12px;color:var(--txt2)">${soal.length} soal ${m.bankSoal&&m.bankSoal.length?'🤖 AI':''}</span></div>
+      <button class="btn btn-sm ghost" onclick="this.closest('div[style*=fixed]').remove()"><i class="ti ti-x"></i></button>
+    </div>
+    <div style="padding:16px 20px;overflow-y:auto">${html}</div>
+  </div>`;
+  document.body.appendChild(overlay);
+  overlay.addEventListener('click',e=>{if(e.target===overlay)overlay.remove();});
 }
 function pickColor(el){document.querySelectorAll('.swatch').forEach(s=>s.classList.remove('picked'));el.classList.add('picked');ST.uploadState.color=el.dataset.c;}
 function umGoStep1(){document.getElementById('um-step1').style.display='block';document.getElementById('um-step2').style.display='none';document.getElementById('um-step3').style.display='none';}
@@ -1123,7 +1157,7 @@ async function saveModule(){
   else{ST.customMods.push(mod);}
   await S.ss('ti:custom_mods',ST.customMods);
   toast('✓ Modul "'+title+'" berhasil disimpan!');
-  showV('admin');loadAdmin();
+  showV('admin');loadAdmin(); // kembali ke admin tanpa cek password (sudah login)
 }
 
 // ─── CSV EXPORT ───────────────────────────────────────────────────────────────
