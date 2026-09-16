@@ -931,7 +931,7 @@ function admTab(tab,btn){
     ${allMods().map((m,i)=>`<tr><td>${i+1}</td><td style="font-weight:500"><span style="width:10px;height:10px;background:${m.color};border-radius:2px;display:inline-block;margin-right:6px;vertical-align:middle"></span>${m.title}</td>
     <td><span class="badge b-blue">${m.cat}</span></td>
     <td>${m.fileType==='pdf'?'<span class="badge b-purple">PDF</span>':m.fileType==='image'?'<span class="badge b-teal">Gambar</span>':'<span class="badge b-gray">Teks</span>'}</td>
-    <td>${m.quiz?m.quiz.length:0}</td>
+    <td>${m.bankSoal&&m.bankSoal.length?m.bankSoal.length+' 🤖':(m.quiz?m.quiz.length:0)}</td>
     <td>${m.builtin?'<span class="badge b-blue">Default</span>':'<span class="badge b-amber">Custom</span>'}</td>
     <td>${m.builtin?'—':`<button class="btn btn-sm" onclick="editMod('${m.id}')"><i class="ti ti-edit"></i></button> <button class="btn btn-sm btn-danger" onclick="delMod('${m.id}')"><i class="ti ti-trash"></i></button> <button class="btn btn-sm" style="background:#7c3aed;color:#fff;border-color:#6d28d9" title="${m.bankSoal?'Bank soal: '+m.bankSoal.length+' soal (klik untuk generate ulang)':'Generate soal AI dari materi'}" onclick="generateAIQuestions('${m.id}')"><i class="ti ti-sparkles"></i>${m.bankSoal?` ${m.bankSoal.length}✓`:' AI'}</button>`}</td></tr>`).join('')}
     </tbody></table></div>
