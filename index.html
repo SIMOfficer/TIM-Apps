@@ -1269,6 +1269,8 @@ async function saveModule(){
   const mod={id,title,cat,desc,color:ST.uploadState.color,tag:cat.substring(0,2).toUpperCase(),builtin:false,
     quiz:qbItems.filter(q=>q.q.trim()&&q.o.filter(o=>o.trim()).length>=2).map(q=>({q:q.q.trim(),o:q.o.map(o=>o.trim()),a:q.a,exp:q.exp||''})),
     createdAt:new Date().toISOString()};
+  // Pertahankan bank soal AI saat edit modul
+  if(existingMod?.bankSoal?.length) mod.bankSoal=existingMod.bankSoal;
   if(tab==='file'&&ST.uploadState.fileData){
     // File baru di-upload
     mod.fileType=ST.uploadState.fileType;mod.fileName=ST.uploadState.fileName;
