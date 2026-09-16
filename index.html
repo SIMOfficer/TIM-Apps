@@ -465,7 +465,8 @@ label.lbl{font-size:12px;font-weight:500;color:var(--txt2);margin-bottom:5px;dis
 
     <!-- Step 3 -->
     <div id="um-step3" style="display:none">
-      <h3 style="margin-bottom:14px">Langkah 3 — Soal Kuis <span style="font-weight:400;font-size:12px;color:var(--txt2)">(min. 1 soal)</span></h3>
+      <h3 style="margin-bottom:6px">Langkah 3 — Soal Kuis <span style="font-weight:400;font-size:12px;color:var(--txt2)">(opsional — bisa generate AI setelah simpan)</span></h3>
+      <p style="font-size:11px;color:var(--txt2);margin-bottom:14px;padding:8px 10px;background:var(--card);border-radius:6px;border-left:3px solid #7b1fa2"><i class="ti ti-sparkles"></i> Soal kuis <b>tidak wajib</b> diisi sekarang. Simpan modul terlebih dahulu, lalu gunakan tombol <b>AI</b> di panel admin untuk generate soal otomatis dari materi.</p>
       <div id="qb-list"></div>
       <div style="display:flex;gap:10px;margin-bottom:20px">
         <button class="btn btn-sm" onclick="addQBItem()"><i class="ti ti-plus"></i> Tambah Soal</button>
@@ -977,7 +978,8 @@ async function editMod(id){
 }
 async function generateAIQuestions(id){
   const m=ST.customMods.find(x=>x.id===id);if(!m)return;
-  const confirm=window.confirm(`Generate soal AI untuk modul "${m.title}"?\n\nProses ini membutuhkan ~15-30 detik.\n${m.bankSoal?'Bank soal lama ('+m.bankSoal.length+' soal) akan diganti.':''}`);
+  const totalExisting=(m.bankSoal?m.bankSoal.length:0)+(m.quiz?m.quiz.length:0);
+  const confirm=window.confirm(`Generate soal AI untuk modul "${m.title}"?\n\nProses ini membutuhkan ~15-30 detik.\n${totalExisting?'Soal yang sudah ada ('+totalExisting+' soal) akan digabungkan dengan soal baru.':'Soal baru akan ditambahkan ke bank soal.'}`);
   if(!confirm)return;
   toast('🤖 Memproses materi dengan Gemini AI...');
   try{
@@ -1009,7 +1011,7 @@ function umGoStep3(){
   if(tab==='text'&&!document.getElementById('mat-text').value.trim()){toast('⚠ Isi materi terlebih dahulu');return;}
   if(tab==='sections'&&!sectionItems.filter(s=>s.h||s.b).length){toast('⚠ Tambahkan minimal 1 bagian materi');return;}
   document.getElementById('um-step2').style.display='none';document.getElementById('um-step3').style.display='block';
-  if(!qbItems.length)addQBItem();renderQB();
+  renderQB();
 }
 function switchMatTab(tab){
   ST.uploadState.matTab=tab;
@@ -1066,12 +1068,13 @@ function renderQB(){
   document.getElementById('qb-count').textContent=qbItems.length+' soal';
 }
 function addQBItem(){qbItems.push({q:'',o:['','','',''],a:0,exp:''});renderQB();}
-function removeQB(i){if(qbItems.length<=1){toast('⚠ Minimal 1 soal');return;}qbItems.splice(i,1);renderQB();}
+function removeQB(i){qbItems.splice(i,1);renderQB();}
 
 async function saveModule(){
-  if(!qbItems.length){toast('⚠ Buat minimal 1 soal kuis');return;}
-  const invalid=qbItems.filter(q=>!q.q.trim()||q.o.filter(o=>o.trim()).length<2);
+  const filledItems=qbItems.filter(q=>q.q.trim());
+  const invalid=filledItems.filter(q=>q.o.filter(o=>o.trim()).length<2);
   if(invalid.length){toast('⚠ Lengkapi pertanyaan dan minimal 2 pilihan jawaban');return;}
+  // soal manual bersifat opsional — bisa diisi nanti via AI generate
   const title=document.getElementById('um-title').value.trim();
   const cat=document.getElementById('um-cat').value;
   const desc=document.getElementById('um-desc').value.trim();
@@ -1080,7 +1083,7 @@ async function saveModule(){
   // Ambil data lama jika edit, agar fileType/driveFileId/fileUrl tidak hilang saat tidak re-upload
   const existingMod=editModId?ST.customMods.find(x=>x.id===editModId):null;
   const mod={id,title,cat,desc,color:ST.uploadState.color,tag:cat.substring(0,2).toUpperCase(),builtin:false,
-    quiz:qbItems.map(q=>({q:q.q.trim(),o:q.o.map(o=>o.trim()),a:q.a,exp:q.exp||''})),
+    quiz:qbItems.filter(q=>q.q.trim()&&q.o.filter(o=>o.trim()).length>=2).map(q=>({q:q.q.trim(),o:q.o.map(o=>o.trim()),a:q.a,exp:q.exp||''})),
     createdAt:new Date().toISOString()};
   if(tab==='file'&&ST.uploadState.fileData){
     // File baru di-upload
