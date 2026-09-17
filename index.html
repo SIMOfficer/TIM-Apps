@@ -175,6 +175,11 @@ label.lbl{font-size:12px;font-weight:500;color:var(--txt2);margin-bottom:5px;dis
 
 /* offline notice */
 .offline-notice{background:#faeeda;border:0.5px solid #fac775;border-radius:var(--r-md);padding:10px 14px;font-size:12px;color:#633806;margin-bottom:14px;display:none}
+
+/* leaderboard tabs */
+.lb-tab{padding:5px 13px;border-radius:20px;border:1.5px solid var(--border2);background:var(--bg-primary);color:var(--txt2);font-size:12px;font-weight:500;cursor:pointer;font-family:var(--font);transition:all .15s}
+.lb-tab:hover{background:var(--bg-secondary);color:var(--txt)}
+.lb-tab.active{background:var(--navy);color:#fff;border-color:var(--navy)}
 </style>
 </head>
 <body>
@@ -268,12 +273,12 @@ label.lbl{font-size:12px;font-weight:500;color:var(--txt2);margin-bottom:5px;dis
     <div style="margin-top:28px">
       <h3 style="margin-bottom:4px"><i class="ti ti-trophy" style="color:#f59e0b"></i> Leaderboard</h3>
       <p style="font-size:12px;color:var(--txt2);margin-bottom:14px">Peringkat berdasarkan hasil semua tes yang telah dikerjakan</p>
-      <div id="leaderboard-tabs" style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap">
-        <button class="btn btn-sm on" onclick="showLB('overall',this)" id="lb-btn-overall">🏆 Overall</button>
-        <button class="btn btn-sm ghost" onclick="showLB('pretest',this)">📋 Pre-Test</button>
-        <button class="btn btn-sm ghost" onclick="showLB('posttest',this)">✅ Post-Test</button>
-        <button class="btn btn-sm ghost" onclick="showLB('exercise',this)">💪 Exercise</button>
-        <button class="btn btn-sm ghost" onclick="showLB('improvement',this)">📈 Peningkatan</button>
+      <div id="leaderboard-tabs" style="display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap">
+        <button class="lb-tab active" onclick="showLB('overall',this)" id="lb-btn-overall">Overall</button>
+        <button class="lb-tab" onclick="showLB('pretest',this)">Pre-Test</button>
+        <button class="lb-tab" onclick="showLB('posttest',this)">Post-Test</button>
+        <button class="lb-tab" onclick="showLB('exercise',this)">Exercise</button>
+        <button class="lb-tab" onclick="showLB('improvement',this)">Peningkatan</button>
       </div>
       <div id="leaderboard-content"></div>
     </div>
@@ -803,8 +808,14 @@ function loadDash(){
   document.getElementById('d-stats').innerHTML=`
     <div style="background:var(--bg-primary);border:0.5px solid var(--border);border-radius:var(--r-md);padding:10px 16px;text-align:center"><span style="font-size:20px;font-weight:500;display:block">${done}/${mods.length}</span><span style="font-size:11px;color:var(--txt2)">Modul Selesai</span></div>
     <div style="background:var(--bg-primary);border:0.5px solid var(--border);border-radius:var(--r-md);padding:10px 16px;text-align:center"><span style="font-size:20px;font-weight:500;display:block;color:var(--green)">${avg}%</span><span style="font-size:11px;color:var(--txt2)">Rata-rata Skor</span></div>`;
-  // Load leaderboard
-  S.gs('ti:all_results').then(res=>{window._allResults=res||[];showLB('overall',document.getElementById('lb-btn-overall'));});
+  // Load leaderboard dari API
+  apiGet({action:'get_leaderboard'}).then(res=>{
+    window._allResults=(res&&res.results)||[];
+    showLB('overall',document.getElementById('lb-btn-overall'));
+  }).catch(()=>{
+    window._allResults=[];
+    showLB('overall',document.getElementById('lb-btn-overall'));
+  });
   document.getElementById('mods-grid').innerHTML=mods.map(m=>{
     const p=ST.progress[m.id];const pct=p?p.pct:0;
     return`<div class="mod-card" onclick="openMod('${m.id}')">
@@ -821,8 +832,8 @@ function loadDash(){
 }
 
 function showLB(type,btn){
-  document.querySelectorAll('#leaderboard-tabs .btn').forEach(b=>{b.classList.remove('on');b.classList.add('ghost');});
-  if(btn){btn.classList.add('on');btn.classList.remove('ghost');}
+  document.querySelectorAll('#leaderboard-tabs .lb-tab').forEach(b=>b.classList.remove('active'));
+  if(btn)btn.classList.add('active');
   const res=window._allResults||[];
   const medals=['🥇','🥈','🥉'];
   const row=(rank,name,dept,val,sub)=>`<div style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--card);border-radius:8px;margin-bottom:6px">
