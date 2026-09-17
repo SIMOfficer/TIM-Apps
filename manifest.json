@@ -1,0 +1,14 @@
+{
+  "name": "TIM Apps – Training Improvement Mandiri",
+  "short_name": "TIM Apps",
+  "description": "Platform belajar mandiri untuk metode improvement QCC, SS, PPS, 5S, Kaizen.",
+  "start_url": "/TIM-Apps/",
+  "display": "standalone",
+  "background_color": "#f0ede8",
+  "theme_color": "#8B1520",
+  "orientation": "portrait",
+  "icons": [
+    { "src": "apple-touch-icon.png", "sizes": "180x180", "type": "image/png" },
+    { "src": "icon-512.png",         "sizes": "512x512",  "type": "image/png", "purpose": "any maskable" }
+  ]
+}
