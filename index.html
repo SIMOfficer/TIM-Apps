@@ -3,7 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Training Improvement Mandiri – Online</title>
+<title>TIM Apps – Training Improvement Mandiri</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%238B1520'/%3E%3Cpath d='M28 55c0-12 9-22 22-22 4 0 8 1 11 3l8-8c-5-4-12-6-19-6C33 22 18 37 18 55c0 10 4 19 11 25l8-8c-5-4-9-11-9-17z' fill='white' opacity='.9'/%3E%3Cpath d='M72 55c0 6-4 13-9 17l8 8c7-6 11-15 11-25 0-7-2-13-6-18l-8 8c3 4 4 6 4 10z' fill='white' opacity='.9'/%3E%3Cpath d='M50 44c-6 0-11 5-11 11s5 11 11 11 11-5 11-11-5-11-11-11zm0 16c-3 0-5-2-5-5s2-5 5-5 5 2 5 5-2 5-5 5z' fill='white'/%3E%3Cpath d='M54 35l10-10 6 6-10 10z' fill='%23D4941A'/%3E%3Cpath d='M58 22h12v12h-6v-6h-6z' fill='%23D4941A'/%3E%3C/svg%3E">
+<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%238B1520'/%3E%3Cpath d='M28 55c0-12 9-22 22-22 4 0 8 1 11 3l8-8c-5-4-12-6-19-6C33 22 18 37 18 55c0 10 4 19 11 25l8-8c-5-4-9-11-9-17z' fill='white' opacity='.9'/%3E%3Cpath d='M72 55c0 6-4 13-9 17l8 8c7-6 11-15 11-25 0-7-2-13-6-18l-8 8c3 4 4 6 4 10z' fill='white' opacity='.9'/%3E%3Cpath d='M50 44c-6 0-11 5-11 11s5 11 11 11 11-5 11-11-5-11-11-11zm0 16c-3 0-5-2-5-5s2-5 5-5 5 2 5 5-2 5-5 5z' fill='white'/%3E%3Cpath d='M54 35l10-10 6 6-10 10z' fill='%23D4941A'/%3E%3Cpath d='M58 22h12v12h-6v-6h-6z' fill='%23D4941A'/%3E%3C/svg%3E">
+<meta name="theme-color" content="#8B1520">
+<meta name="application-name" content="TIM Apps">
+<meta name="apple-mobile-web-app-title" content="TIM Apps">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tabler-icons/3.19.0/tabler-icons.min.css">
 <style>
 /* ── Standalone CSS variables (menggantikan variabel Claude.ai) ── */
@@ -23,10 +30,10 @@
   --r-md: 8px; --r-lg: 12px; --r-xl: 16px;
   --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
   /* brand */
-  --navy:  #0f2d52;
-  --navy2: #1e3a5f;
-  --amber: #f59e0b;
-  --amber2:#d97706;
+  --navy:  #8B1520;
+  --navy2: #6B0F18;
+  --amber: #D4941A;
+  --amber2:#b87d15;
   --green: #059669;
   --red:   #dc2626;
 }
@@ -183,13 +190,34 @@ label.lbl{font-size:12px;font-weight:500;color:var(--txt2);margin-bottom:5px;dis
 <!-- ── SPLASH ─────────────────────────────────────────────────────── -->
 <div id="splash" class="active-view">
   <div class="topbar">
-    <div class="brand"><i class="ti ti-brain"></i> Training Improvement Mandiri</div>
+    <div class="brand"><svg width="22" height="22" viewBox="0 0 100 100" style="flex-shrink:0"><rect width="100" height="100" rx="22" fill="rgba(255,255,255,.2)"/><path d="M50 28c-7 0-13 4-16 10-3-1-7 0-9 3s-2 7 0 10c-2 2-3 5-2 8 1 4 4 6 8 6h1c3 5 9 8 15 8h3c6 0 12-3 15-8h1c4 0 7-2 8-6 1-3 0-6-2-8 2-3 2-7 0-10s-6-4-9-3c-3-6-9-10-16-10z" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><line x1="50" y1="52" x2="50" y2="68" stroke="#D4941A" stroke-width="4" stroke-linecap="round"/><polyline points="43,61 50,52 57,61" fill="none" stroke="#D4941A" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg> TIM Apps</div>
     <button class="btn btn-sm ghost" onclick="goAdmin()"><i class="ti ti-shield"></i> Admin</button>
   </div>
   <div class="splash">
-    <div class="splash-logo"><i class="ti ti-brain"></i></div>
-    <h1 style="color:var(--navy)">Training Improvement Mandiri</h1>
-    <p style="color:var(--txt2);max-width:400px;font-size:14px">Platform belajar mandiri untuk semua metode improvement — QCC 2.0, SS, PPS, 5S, Kaizen, dan lainnya.</p>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:10px">
+      <svg width="88" height="88" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" style="filter:drop-shadow(0 4px 16px rgba(139,21,32,.35))">
+        <defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#A8192A"/><stop offset="100%" stop-color="#6B0F18"/></linearGradient></defs>
+        <rect width="100" height="100" rx="22" fill="url(#bg)"/>
+        <!-- brain lobes -->
+        <path d="M50 28c-7 0-13 4-16 10-3-1-7 0-9 3s-2 7 0 10c-2 2-3 5-2 8 1 4 4 6 8 6h1c3 5 9 8 15 8v0c0 0 0 0 0 0h3c0 0 0 0 0 0v0c6 0 12-3 15-8h1c4 0 7-2 8-6 1-3 0-6-2-8 2-3 2-7 0-10s-6-4-9-3c-3-6-9-10-16-10z" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity=".95"/>
+        <!-- center divider -->
+        <line x1="50" y1="31" x2="50" y2="73" stroke="white" stroke-width="2" opacity=".6" stroke-dasharray="3,3"/>
+        <!-- brain wrinkles left -->
+        <path d="M38 44 Q34 50 38 56" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" opacity=".7"/>
+        <path d="M42 40 Q37 47 42 54" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" opacity=".7"/>
+        <!-- brain wrinkles right -->
+        <path d="M62 44 Q66 50 62 56" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" opacity=".7"/>
+        <path d="M58 40 Q63 47 58 54" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" opacity=".7"/>
+        <!-- arrow up -->
+        <line x1="50" y1="68" x2="50" y2="52" stroke="#D4941A" stroke-width="3.5" stroke-linecap="round"/>
+        <polyline points="43,59 50,51 57,59" fill="none" stroke="#D4941A" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <div style="text-align:center">
+        <div style="font-size:26px;font-weight:700;color:var(--navy);letter-spacing:-.5px">TIM Apps</div>
+        <div style="font-size:12px;color:var(--txt2);letter-spacing:.5px;margin-top:2px">Training Improvement Mandiri</div>
+      </div>
+    </div>
+    <p style="color:var(--txt2);max-width:400px;font-size:14px;margin-top:4px">Platform belajar mandiri untuk semua metode improvement — QCC 2.0, SS, PPS, 5S, Kaizen, dan lainnya.</p>
     <div class="feat-grid">
       <div class="feat"><i class="ti ti-upload"></i><span>Upload Materi</span></div>
       <div class="feat"><i class="ti ti-books"></i><span>Multi Metode</span></div>
@@ -207,7 +235,7 @@ label.lbl{font-size:12px;font-weight:500;color:var(--txt2);margin-bottom:5px;dis
 <!-- ── REGISTER ───────────────────────────────────────────────────── -->
 <div id="register">
   <div class="topbar">
-    <div class="brand"><i class="ti ti-brain"></i> Training Improvement</div>
+    <div class="brand"><svg width="20" height="20" viewBox="0 0 100 100" style="flex-shrink:0"><rect width="100" height="100" rx="22" fill="rgba(255,255,255,.2)"/><path d="M50 28c-7 0-13 4-16 10-3-1-7 0-9 3s-2 7 0 10c-2 2-3 5-2 8 1 4 4 6 8 6h1c3 5 9 8 15 8h3c6 0 12-3 15-8h1c4 0 7-2 8-6 1-3 0-6-2-8 2-3 2-7 0-10s-6-4-9-3c-3-6-9-10-16-10z" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><line x1="50" y1="52" x2="50" y2="68" stroke="#D4941A" stroke-width="4" stroke-linecap="round"/><polyline points="43,61 50,52 57,61" fill="none" stroke="#D4941A" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg> TIM Apps</div>
     <button class="btn btn-sm ghost" onclick="showV('splash')"><i class="ti ti-arrow-left"></i> Kembali</button>
   </div>
   <div class="page-center">
@@ -228,7 +256,7 @@ label.lbl{font-size:12px;font-weight:500;color:var(--txt2);margin-bottom:5px;dis
 <!-- ── DASHBOARD ──────────────────────────────────────────────────── -->
 <div id="dashboard">
   <div class="topbar">
-    <div class="brand"><i class="ti ti-brain"></i> Training Improvement</div>
+    <div class="brand"><svg width="20" height="20" viewBox="0 0 100 100" style="flex-shrink:0"><rect width="100" height="100" rx="22" fill="rgba(255,255,255,.2)"/><path d="M50 28c-7 0-13 4-16 10-3-1-7 0-9 3s-2 7 0 10c-2 2-3 5-2 8 1 4 4 6 8 6h1c3 5 9 8 15 8h3c6 0 12-3 15-8h1c4 0 7-2 8-6 1-3 0-6-2-8 2-3 2-7 0-10s-6-4-9-3c-3-6-9-10-16-10z" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><line x1="50" y1="52" x2="50" y2="68" stroke="#D4941A" stroke-width="4" stroke-linecap="round"/><polyline points="43,61 50,52 57,61" fill="none" stroke="#D4941A" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg> TIM Apps</div>
     <div class="topbar-r">
       <div class="avatar" id="d-av">?</div>
       <span style="font-size:12px;color:rgba(255,255,255,.85)" id="d-name"></span>
@@ -426,7 +454,7 @@ label.lbl{font-size:12px;font-weight:500;color:var(--txt2);margin-bottom:5px;dis
         <div class="fg">
           <label class="lbl">Warna Modul</label>
           <div class="color-swatch" id="color-swatches">
-            <div class="swatch picked" style="background:#0f2d52" data-c="#0f2d52" onclick="pickColor(this)"></div>
+            <div class="swatch picked" style="background:#8B1520" data-c="#8B1520" onclick="pickColor(this)"></div>
             <div class="swatch" style="background:#1565c0" data-c="#1565c0" onclick="pickColor(this)"></div>
             <div class="swatch" style="background:#7b1fa2" data-c="#7b1fa2" onclick="pickColor(this)"></div>
             <div class="swatch" style="background:#00695c" data-c="#00695c" onclick="pickColor(this)"></div>
@@ -666,7 +694,7 @@ const BUILTIN=[]; /* const BUILTIN_OLD=[
 //]; */
 
 // ─── STATE ───────────────────────────────────────────────────────────────────
-let ST={user:null,mod:null,progress:{},qs:{idx:0,ans:[],done:false},customMods:[],uploadState:{color:'#0f2d52',matTab:'file',fileData:null,fileType:null,fileName:null,fileMime:null},adTab:'modules'};
+let ST={user:null,mod:null,progress:{},qs:{idx:0,ans:[],done:false},customMods:[],uploadState:{color:'#8B1520',matTab:'file',fileData:null,fileType:null,fileName:null,fileMime:null},adTab:'modules'};
 let qbItems=[],sectionItems=[],editModId=null;
 
 // ─── HELPERS ─────────────────────────────────────────────────────────────────
@@ -911,7 +939,7 @@ function goQuiz(){
         ${avail?`<i class="ti ti-chevron-right" style="color:${t.color}"></i>`:`<span style="font-size:11px;color:#9ca3af">Perlu ${t.count} soal</span>`}
       </div></div>`;}).join('');
   overlay.innerHTML=`<div style="background:#fff;border-radius:12px;max-width:480px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,.4)">
-    <div style="padding:18px 20px;background:#0f2d52;border-radius:12px 12px 0 0">
+    <div style="padding:18px 20px;background:#8B1520;border-radius:12px 12px 0 0">
       <div style="color:#fff;font-weight:700;font-size:15px"><i class="ti ti-help-circle"></i> Pilih Jenis Tes</div>
       <div style="color:rgba(255,255,255,.7);font-size:12px;margin-top:2px">${m.title} &bull; ${pool.length} soal tersedia</div>
     </div>
@@ -1106,7 +1134,7 @@ function admTab(tab,btn){
 // ─── UPLOAD MODULE ────────────────────────────────────────────────────────────
 function startUpload(){
   editModId=null;qbItems=[];sectionItems=[];
-  ST.uploadState={color:'#0f2d52',matTab:'file',fileData:null,fileType:null,fileName:null,fileMime:null};
+  ST.uploadState={color:'#8B1520',matTab:'file',fileData:null,fileType:null,fileName:null,fileMime:null};
   document.getElementById('um-mode-label').textContent='Tambah Modul Baru';
   document.getElementById('um-page-title').textContent='Tambah Modul Training Baru';
   ['um-title','um-desc'].forEach(id=>document.getElementById(id).value='');
@@ -1165,7 +1193,7 @@ function _renderReview(m){
   const existing=document.getElementById('review-overlay');if(existing)existing.remove();
   const opts=['A','B','C','D'];
   const html=_reviewSoal.map((q,i)=>`
-    <div id="rv-${i}" style="margin-bottom:16px;padding:14px;background:#fff;border-radius:8px;border:1px solid #e5e7eb;border-left:4px solid #0f2d52">
+    <div id="rv-${i}" style="margin-bottom:16px;padding:14px;background:#fff;border-radius:8px;border:1px solid #e5e7eb;border-left:4px solid #8B1520">
       <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">
         <span style="font-weight:700;font-size:12px;color:#6b7280">Soal ${i+1}</span>
         <div style="display:flex;gap:6px">
@@ -1182,33 +1210,33 @@ function _renderReview(m){
   overlay.id='review-overlay';
   overlay.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:9999;display:flex;align-items:center;justify-content:center;padding:16px';
   overlay.innerHTML=`<div style="background:#f8fafc;border-radius:12px;max-width:700px;width:100%;max-height:88vh;display:flex;flex-direction:column;box-shadow:0 20px 60px rgba(0,0,0,.4)">
-    <div style="padding:16px 20px;background:#0f2d52;border-radius:12px 12px 0 0;display:flex;justify-content:space-between;align-items:center;flex-shrink:0">
+    <div style="padding:16px 20px;background:#8B1520;border-radius:12px 12px 0 0;display:flex;justify-content:space-between;align-items:center;flex-shrink:0">
       <div style="color:#fff"><strong>${m?m.title:''}</strong> <span style="font-size:12px;opacity:.8">${_reviewSoal.length} soal ${m&&m.bankSoal&&m.bankSoal.length?'🤖 AI':''}</span></div>
       <button onclick="document.getElementById('review-overlay').remove()" style="background:rgba(255,255,255,.2);border:none;color:#fff;border-radius:6px;padding:4px 10px;cursor:pointer;font-size:18px">✕</button>
     </div>
     <div style="padding:16px 20px;overflow-y:auto;flex:1">${html}</div>
     <div style="padding:12px 20px;border-top:1px solid #e5e7eb;display:flex;justify-content:flex-end;gap:8px;flex-shrink:0;background:#fff;border-radius:0 0 12px 12px">
       <button onclick="document.getElementById('review-overlay').remove()" style="padding:7px 16px;border:1px solid #d1d5db;border-radius:6px;background:#fff;cursor:pointer;font-size:13px">Tutup</button>
-      <button onclick="rvSave()" style="padding:7px 16px;border:none;border-radius:6px;background:#0f2d52;color:#fff;cursor:pointer;font-size:13px;font-weight:600"><i class="ti ti-device-floppy"></i> Simpan Perubahan</button>
+      <button onclick="rvSave()" style="padding:7px 16px;border:none;border-radius:6px;background:#8B1520;color:#fff;cursor:pointer;font-size:13px;font-weight:600"><i class="ti ti-device-floppy"></i> Simpan Perubahan</button>
     </div>
   </div>`;
   document.body.appendChild(overlay);
 }
 function rvEdit(i){
   const q=_reviewSoal[i];const opts=['A','B','C','D'];
-  const html=`<div style="padding:14px;background:#fff;border-radius:8px;border:2px solid #0f2d52">
-    <div style="font-weight:700;font-size:12px;color:#0f2d52;margin-bottom:8px">✏️ Edit Soal ${i+1}</div>
+  const html=`<div style="padding:14px;background:#fff;border-radius:8px;border:2px solid #8B1520">
+    <div style="font-weight:700;font-size:12px;color:#8B1520;margin-bottom:8px">✏️ Edit Soal ${i+1}</div>
     <div style="margin-bottom:8px"><label style="font-size:11px;color:#6b7280;display:block;margin-bottom:3px">Pertanyaan</label>
       <textarea id="re-q" style="width:100%;border:1px solid #d1d5db;border-radius:6px;padding:6px;font-size:13px;resize:vertical">${q.q}</textarea></div>
     ${q.o.map((o,j)=>`<div style="display:flex;align-items:center;gap:6px;margin-bottom:6px">
-      <input type="radio" name="re-ans" value="${j}" ${q.a===j?'checked':''} style="accent-color:#0f2d52">
+      <input type="radio" name="re-ans" value="${j}" ${q.a===j?'checked':''} style="accent-color:#8B1520">
       <label style="font-size:12px;color:#374151;min-width:20px">${opts[j]}</label>
       <input id="re-o${j}" type="text" value="${o}" style="flex:1;border:1px solid #d1d5db;border-radius:6px;padding:5px 8px;font-size:12px">
     </div>`).join('')}
     <div style="margin-bottom:10px"><label style="font-size:11px;color:#6b7280;display:block;margin-bottom:3px">Penjelasan jawaban</label>
       <input id="re-exp" type="text" value="${q.exp||''}" style="width:100%;border:1px solid #d1d5db;border-radius:6px;padding:6px;font-size:12px"></div>
     <div style="display:flex;gap:8px">
-      <button onclick="rvSaveEdit(${i})" style="padding:6px 14px;border:none;border-radius:6px;background:#0f2d52;color:#fff;cursor:pointer;font-size:12px">Simpan</button>
+      <button onclick="rvSaveEdit(${i})" style="padding:6px 14px;border:none;border-radius:6px;background:#8B1520;color:#fff;cursor:pointer;font-size:12px">Simpan</button>
       <button onclick="_renderReview(allMods().find(x=>x.id===_reviewId))" style="padding:6px 14px;border:1px solid #d1d5db;border-radius:6px;background:#fff;cursor:pointer;font-size:12px">Batal</button>
     </div>
   </div>`;
@@ -1234,7 +1262,7 @@ async function rvSave(){
   else m.quiz=_reviewSoal;
   await S.ss('ti:custom_mods',ST.customMods);
   // sync ke Sheets
-  const sheet_row={id:m.id,title:m.title,cat:m.cat,desc:m.desc||'',color:m.color||'#0f2d52',
+  const sheet_row={id:m.id,title:m.title,cat:m.cat,desc:m.desc||'',color:m.color||'#8B1520',
     fileType:m.fileType||'',driveFileId:m.driveFileId||'',textContent:m.textContent||'',
     sections:m.sections||[],quiz:m.quiz||[],bankSoal:m.bankSoal||null};
   await apiPost({action:'save_custom_module',...sheet_row});
