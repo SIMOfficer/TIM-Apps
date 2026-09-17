@@ -215,7 +215,7 @@ label.lbl{font-size:12px;font-weight:500;color:var(--txt2);margin-bottom:5px;dis
     <div class="card" style="position:relative">
       <div class="fg"><label class="lbl" for="rn">Nama Lengkap *</label><input id="rn" type="text" placeholder="Nama lengkap Anda" autocomplete="off" oninput="acSearch(this.value)" onblur="setTimeout(acHide,200)"></div>
       <div class="fg"><label class="lbl" for="rnik">Nomor Induk Karyawan (NIK) *</label><input id="rnik" type="text" placeholder="Contoh: 2024001" autocomplete="off" oninput="acSearchNIK(this.value)" onblur="setTimeout(acHide,200)"></div>
-      <div id="ac-list" style="display:none;position:absolute;left:0;right:0;background:var(--card);border:1px solid var(--border);border-radius:8px;box-shadow:0 4px 16px rgba(0,0,0,.15);z-index:99;max-height:220px;overflow-y:auto;margin-top:-8px"></div>
+      <div id="ac-list" style="display:none;position:absolute;left:0;right:0;background:#fff;border:1px solid #d1d5db;border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,.18);z-index:200;max-height:220px;overflow-y:auto;margin-top:-8px"></div>
       <div class="fg"><label class="lbl" for="rdept">Departemen / Bagian *</label><input id="rdept" type="text" placeholder="Production, QC, Engineering, dll"></div>
       <div class="fg"><label class="lbl" for="rem">Email *</label><input id="rem" type="email" placeholder="nama@perusahaan.com"><span class="hint">Hasil kuis dikirim ke email ini</span></div>
       <button class="btn btn-primary" style="width:100%;justify-content:center;padding:10px" onclick="doReg()">
@@ -736,11 +736,11 @@ function acRender(matches,inputId){
   el.innerHTML='';
   matches.slice(0,8).forEach(u=>{
     const d=document.createElement('div');
-    d.style.cssText='padding:10px 14px;cursor:pointer;border-bottom:1px solid var(--border);display:flex;flex-direction:column;gap:2px';
-    d.innerHTML=`<span style="font-weight:600;font-size:14px">${u.name}</span><span style="font-size:12px;color:var(--txt2)">NIK: ${u.NIK} &nbsp;·&nbsp; ${u.dept}</span>`;
+    d.style.cssText='padding:10px 14px;cursor:pointer;border-bottom:1px solid #e5e7eb;display:flex;flex-direction:column;gap:2px;background:#fff';
+    d.innerHTML=`<span style="font-weight:600;font-size:14px;color:#111">${u.name}</span><span style="font-size:12px;color:#6b7280">NIK: ${u.NIK} &nbsp;·&nbsp; ${u.dept}</span>`;
     d.onmousedown=()=>acFill(u);
-    d.onmouseover=()=>d.style.background='var(--bg)';
-    d.onmouseout=()=>d.style.background='';
+    d.onmouseover=()=>d.style.background='#f3f4f6';
+    d.onmouseout=()=>d.style.background='#fff';
     el.appendChild(d);
   });
   el.style.display='block';
