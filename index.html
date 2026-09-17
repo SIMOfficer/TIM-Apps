@@ -212,9 +212,10 @@ label.lbl{font-size:12px;font-weight:500;color:var(--txt2);margin-bottom:5px;dis
   </div>
   <div class="page-center">
     <div style="margin:8px 0 20px"><h2>Daftar Karyawan</h2><p style="color:var(--txt2);font-size:13px;margin-top:4px">Isi data diri untuk mengakses perpustakaan training.</p></div>
-    <div class="card">
-      <div class="fg"><label class="lbl" for="rn">Nama Lengkap *</label><input id="rn" type="text" placeholder="Nama lengkap Anda"></div>
-      <div class="fg"><label class="lbl" for="rnik">Nomor Induk Karyawan (NIK) *</label><input id="rnik" type="text" placeholder="Contoh: 2024001"></div>
+    <div class="card" style="position:relative">
+      <div class="fg"><label class="lbl" for="rn">Nama Lengkap *</label><input id="rn" type="text" placeholder="Nama lengkap Anda" autocomplete="off" oninput="acSearch(this.value)" onblur="setTimeout(acHide,200)"></div>
+      <div class="fg"><label class="lbl" for="rnik">Nomor Induk Karyawan (NIK) *</label><input id="rnik" type="text" placeholder="Contoh: 2024001" autocomplete="off" oninput="acSearchNIK(this.value)" onblur="setTimeout(acHide,200)"></div>
+      <div id="ac-list" style="display:none;position:absolute;left:0;right:0;background:var(--card);border:1px solid var(--border);border-radius:8px;box-shadow:0 4px 16px rgba(0,0,0,.15);z-index:99;max-height:220px;overflow-y:auto;margin-top:-8px"></div>
       <div class="fg"><label class="lbl" for="rdept">Departemen / Bagian *</label><input id="rdept" type="text" placeholder="Production, QC, Engineering, dll"></div>
       <div class="fg"><label class="lbl" for="rem">Email *</label><input id="rem" type="email" placeholder="nama@perusahaan.com"><span class="hint">Hasil kuis dikirim ke email ini</span></div>
       <button class="btn btn-primary" style="width:100%;justify-content:center;padding:10px" onclick="doReg()">
@@ -692,16 +693,71 @@ function getLvl(p){if(p<=30)return'Level 1';if(p<=50)return'Level 2';if(p<=75)re
   }
 
   const u=await S.g('ti:user');
-  if(u){
+  if(u && u.name && u.NIK && u.dept && u.email){
     ST.user=u;
     // Coba load progress dari API, fallback ke cache
     const apiProg = await loadProgressFromAPI(u.NIK);
     if (!apiProg) { const p=await S.g('ti:prog:'+u.NIK);if(p)ST.progress=p; }
     loadDash();showV('dashboard');
+  } else if(u){
+    // Data tidak lengkap — bersihkan dan minta isi ulang
+    await S.s('ti:user',null);
   }
 })();
 
 // ─── AUTH ────────────────────────────────────────────────────────────────────
+// ─── AUTOCOMPLETE REGISTER ───────────────────────────────────────────────────
+let _acUsers=null;
+async function acLoad(){
+  if(_acUsers)return _acUsers;
+  // Coba dari cache sessionStorage dulu
+  try{const c=sessionStorage.getItem('ti:reg_users');if(c){_acUsers=JSON.parse(c);return _acUsers;}}catch(e){}
+  const res=await apiGet({action:'get_users'});
+  if(res&&res.users){_acUsers=res.users;try{sessionStorage.setItem('ti:reg_users',JSON.stringify(_acUsers));}catch(e){}}
+  return _acUsers||[];
+}
+function acHide(){const el=document.getElementById('ac-list');if(el)el.style.display='none';}
+function acFill(u){
+  document.getElementById('rn').value=u.name;
+  document.getElementById('rnik').value=u.NIK;
+  document.getElementById('rdept').value=u.dept;
+  document.getElementById('rem').value=u.email;
+  acHide();
+}
+function acPosition(inputId){
+  const inp=document.getElementById(inputId);const el=document.getElementById('ac-list');if(!inp||!el)return;
+  const r=inp.getBoundingClientRect();const cr=inp.closest('.card').getBoundingClientRect();
+  el.style.top=(r.bottom-cr.top+4)+'px';
+}
+function acRender(matches,inputId){
+  const el=document.getElementById('ac-list');if(!el)return;
+  if(!matches.length){el.style.display='none';return;}
+  if(inputId)acPosition(inputId);
+  el.innerHTML='';
+  matches.slice(0,8).forEach(u=>{
+    const d=document.createElement('div');
+    d.style.cssText='padding:10px 14px;cursor:pointer;border-bottom:1px solid var(--border);display:flex;flex-direction:column;gap:2px';
+    d.innerHTML=`<span style="font-weight:600;font-size:14px">${u.name}</span><span style="font-size:12px;color:var(--txt2)">NIK: ${u.NIK} &nbsp;·&nbsp; ${u.dept}</span>`;
+    d.onmousedown=()=>acFill(u);
+    d.onmouseover=()=>d.style.background='var(--bg)';
+    d.onmouseout=()=>d.style.background='';
+    el.appendChild(d);
+  });
+  el.style.display='block';
+}
+async function acSearch(v){
+  if(v.length<2){acHide();return;}
+  const users=await acLoad();
+  const q=v.toLowerCase();
+  acRender(users.filter(u=>u.name.toLowerCase().includes(q)),'rn');
+}
+async function acSearchNIK(v){
+  if(!v){acHide();return;}
+  const users=await acLoad();
+  const q=v.toLowerCase();
+  acRender(users.filter(u=>u.NIK.toLowerCase().includes(q)),'rnik');
+}
+
 async function doReg(){
   const name=document.getElementById('rn').value.trim(),NIK=document.getElementById('rnik').value.trim();
   const dept=document.getElementById('rdept').value.trim(),email=document.getElementById('rem').value.trim();
@@ -711,6 +767,8 @@ async function doReg(){
   ST.user=u;await S.s('ti:user',u);
   let us=await S.gs('ti:all_users')||[];if(!us.find(x=>x.NIK===NIK)){us.push(u);await S.ss('ti:all_users',us);}
   syncRegister(u); // kirim ke Google Sheets
+  // Refresh cache autocomplete
+  try{sessionStorage.removeItem('ti:reg_users');_acUsers=null;}catch(e){}
   // Load progress dari API
   await loadProgressFromAPI(NIK);
   loadDash();showV('dashboard');toast('✓ Selamat datang, '+name+'!');
